@@ -2,7 +2,7 @@
 
 clear
 // import formatted apple data
-import delimited "C:\Users\anusha\Desktop\eco446\Formatted-Apple-Mobility-Trends.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\Formatted-Apple-Mobility-Trends.csv"
 //change the date type
 gen time = date(date, "MDY")
 format time %td
@@ -38,7 +38,7 @@ line trend time if mobility_type == 3 & time >= td(1oct2020) & time <= td(1nov20
 
 clear
 // import the google data
-import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\2020_CA_Region_Mobility_Report.csv"
 // change the date string variable to use in graphs
 gen time = date(date, "YMD")
 format time %td
@@ -75,7 +75,7 @@ line parks_percent_change_from_baseli  time if time >= td(1oct2020) & time <= td
 
 clear
 // import breton first wave start date dataset
-import delimited "C:\Users\anusha\Desktop\eco446\Policy-Implementation-Dates.csv", varnames(1) 
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\Policy-Implementation-Dates.csv", varnames(1) 
 
 gen stateofemergency = date( declaredstateofemergency , "DMY")
 format stateofemergency %td
@@ -113,7 +113,7 @@ twoway (dot stateofemergency schoolclosure visitstolongtermcarehomeban nonessent
 
 clear
 // import breton data
-import delimited "C:\Users\anusha\Downloads\COVID19-Canada-Provinces-master\COVID19-Canada-Provinces-master\Data\Canada-COVID19-Stringency.csv", varnames(1) encoding(ISO-8859-2) 
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\Canada-COVID19-Stringency.csv", varnames(1) encoding(ISO-8859-2) 
 gen time = date(date, "YMD")
 format time %td
 keep if time <= td(19feb2021)
@@ -195,7 +195,7 @@ twoway (scatter cultural_services school_closures dining_and_restaurants non_ess
 
 clear
 // import reopenning data
-import delimited "C:\Users\anusha\Desktop\eco446\covid_indicators_appended.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\covid_indicators_appended.csv"
 
 gen time = date(compiledate, "YMD")
 format time %td
@@ -233,7 +233,7 @@ twoway (scatter cultural borders eateries schooling stores time if jurisdiction 
 //// parks_percent_change_from_baseli
 clear
 // import the google data
-import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\2020_CA_Region_Mobility_Report.csv"
 
 // change the date string variable to use in graphs
 gen time = date(date, "YMD")
@@ -280,7 +280,7 @@ line x1-x9 time , c(L) lc(gs13 ..) lw(thin ..)  ///
 //// grocery and pharmacy
 clear
 // import the google data
-import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\2020_CA_Region_Mobility_Report.csv"
 
 // change the date string variable to use in graphs
 gen time = date(date, "YMD")
@@ -325,7 +325,7 @@ line x1-x10 time , c(L) lc(gs13 ..) lw(thin ..)  ///
 // retail and recreation
 clear
 // import the google data
-import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\2020_CA_Region_Mobility_Report.csv"
 
 set scheme s1color 
 
@@ -367,7 +367,7 @@ line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  ///
 // workplaces_percent_change_from_b
 clear
 // import the google data
-import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\2020_CA_Region_Mobility_Report.csv"
 
 // change the date string variable to use in graphs
 gen time = date(date, "YMD")
@@ -405,7 +405,7 @@ line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  ///
 //residential_percent_change_from_
 clear
 // import the google data
-import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\2020_CA_Region_Mobility_Report.csv"
 
 // change the date string variable to use in graphs
 gen time = date(date, "YMD")
@@ -442,7 +442,7 @@ line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  ///
 //trend 1 - driving
 clear
 // import formatted apple data
-import delimited "C:\Users\anusha\Desktop\eco446\Formatted-Apple-Mobility-Trends.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\Formatted-Apple-Mobility-Trends.csv"
 //change the date type
 gen time = date(date, "MDY")
 format time %td
@@ -494,7 +494,7 @@ line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  ///
 //trend 2 - transit
 clear
 // import formatted apple data
-import delimited "C:\Users\anusha\Desktop\eco446\Formatted-Apple-Mobility-Trends.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\Formatted-Apple-Mobility-Trends.csv"
 //change the date type
 gen time = date(date, "MDY")
 format time %td
@@ -547,7 +547,7 @@ line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  ///
 //trend 3 - walking
 clear
 // import formatted apple data
-import delimited "C:\Users\anusha\Desktop\eco446\Formatted-Apple-Mobility-Trends.csv"
+import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\Formatted-Apple-Mobility-Trends.csv"
 //change the date type
 gen time = date(date, "MDY")
 format time %td
