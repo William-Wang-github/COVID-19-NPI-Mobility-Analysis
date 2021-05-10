@@ -1,0 +1,1168 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\anusha\Desktop\eco446\graphs for final project log file.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 9 Apr 2021, 00:16:37
+
+{com}. do "C:\Users\anusha\AppData\Local\Temp\STD8db4_000000.tmp"
+{txt}
+{com}. //// all graphs for the project 
+> 
+. clear
+{txt}
+{com}. // import formatted apple data
+. import delimited "C:\Users\anusha\Desktop\eco446\Formatted-Apple-Mobility-Trends.csv"
+{res}{text}(6 vars, 20,550 obs)
+
+{com}. //change the date type
+. gen time = date(date, "MDY")
+{txt}
+{com}. format time %td
+{txt}
+{com}. keep if time >= td(1mar2020) & time <= td(19feb2021)
+{txt}(2,750 observations deleted)
+
+{com}. keep if region_type == ""
+{txt}(7,476 observations deleted)
+
+{com}. drop date region_type region_name 
+{txt}
+{com}. 
+. rename mobility_type type 
+{res}{txt}
+{com}. encode type, generate(mobility_type)
+{txt}
+{com}. drop type
+{txt}
+{com}. 
+. rename province prov
+{res}{txt}
+{com}. encode prov, generate(province)
+{txt}
+{com}. drop prov
+{txt}
+{com}. 
+. move trend mobility_type
+{txt}
+{com}. move time mobility_type
+{txt}
+{com}. move time trend
+{txt}
+{com}. move province mobility_type
+{txt}
+{com}. 
+. 
+. set scheme s1color
+{txt}
+{com}. 
+. drop if province == 8 // no observations
+{txt}(356 observations deleted)
+
+{com}. 
+. line trend time if mobility_type == 1 & time >= td(1mar2020) & time <= td(1apr2020), by(province)
+{res}{txt}
+{com}. line trend time if mobility_type == 1 & time >= td(1oct2020) & time <= td(1nov2020), by(province)
+{res}{txt}
+{com}. line trend time if mobility_type == 2 & time >= td(1mar2020) & time <= td(1apr2020), by(province)
+{res}{txt}
+{com}. line trend time if mobility_type == 2 & time >= td(1oct2020) & time <= td(1nov2020), by(province)
+{res}{txt}
+{com}. line trend time if mobility_type == 3 & time >= td(1mar2020) & time <= td(1apr2020), by(province)
+{res}{txt}
+{com}. line trend time if mobility_type == 3 & time >= td(1oct2020) & time <= td(1nov2020), by(province)
+{res}{txt}
+{com}. 
+. 
+. clear
+{txt}
+{com}. // import the google data
+. import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+{res}{text}(15 vars, 91,403 obs)
+
+{com}. // change the date string variable to use in graphs
+. gen time = date(date, "YMD")
+{txt}
+{com}. format time %td
+{txt}
+{com}. keep if time >= td(1mar2020) & time <= td(19feb2021)
+{txt}(4,411 observations deleted)
+
+{com}. keep sub_region_1 iso_3166_2_code retail_and_recreation_percent_ch grocery_and_pharmacy_percent_cha parks_percent_change_from_baseli transit_stations_percent_change_ workplaces_percent_change_from_b residential_percent_change_from_ time
+{txt}
+{com}. drop if missing(iso_3166_2_code)
+{txt}(82,524 observations deleted)
+
+{com}. rename sub_region_1 prov
+{res}{txt}
+{com}. drop iso_3166_2_code
+{txt}
+{com}. encode prov, generate(province)
+{txt}
+{com}. drop prov
+{txt}
+{com}. 
+. set scheme s1color
+{txt}
+{com}. 
+. line workplaces_percent_change_from_b  time if time >= td(1mar2020) & time <= td(1apr2020), by(province)
+{res}{txt}
+{com}. line workplaces_percent_change_from_b  time if time >= td(1oct2020) & time <= td(1nov2020), by(province)
+{res}{txt}
+{com}. line retail_and_recreation_percent_ch time if time >= td(1mar2020) & time <= td(1apr2020), by(province)
+{res}{txt}
+{com}. 
+. drop if province == 8
+{txt}(276 observations deleted)
+
+{com}. line retail_and_recreation_percent_ch time if time >= td(1oct2020) & time <= td(1nov2020), by(province)
+{res}{txt}
+{com}. line grocery_and_pharmacy_percent_cha time if time >= td(1mar2020) & time <= td(1apr2020), by(province)
+{res}{txt}
+{com}. 
+. drop if province == 6
+{txt}(331 observations deleted)
+
+{com}. drop if province == 13
+{txt}(306 observations deleted)
+
+{com}. 
+. line grocery_and_pharmacy_percent_cha time if time >= td(1oct2020) & time <= td(1nov2020), by(province)
+{res}{txt}
+{com}. line residential_percent_change_from_ time if time >= td(1mar2020) & time <= td(1apr2020), by(province)
+{res}{txt}
+{com}. line residential_percent_change_from_ time if time >= td(1oct2020) & time <= td(1nov2020), by(province)
+{res}{txt}
+{com}. 
+. drop if province == 10
+{txt}(351 observations deleted)
+
+{com}. 
+. line parks_percent_change_from_baseli  time if time >= td(1mar2020) & time <= td(1apr2020), by(province)
+{res}{txt}
+{com}. line parks_percent_change_from_baseli  time if time >= td(1oct2020) & time <= td(1nov2020), by(province)
+{res}{txt}
+{com}. 
+. 
+. clear
+{txt}
+{com}. // import breton first wave start date dataset
+. import delimited "C:\Users\anusha\Desktop\eco446\Policy-Implementation-Dates.csv", varnames(1) 
+{res}{text}(22 vars, 13 obs)
+
+{com}. 
+. gen stateofemergency = date( declaredstateofemergency , "DMY")
+{txt}
+{com}. format stateofemergency %td
+{txt}
+{com}. 
+. gen schoolclosure = date( closedk12schools , "DMY")
+{txt}
+{com}. format schoolclosure %td
+{txt}
+{com}. 
+. gen visitstolongtermcarehomeban = date( bannedvisitstolongtermcarehomes , "DMY")
+{txt}(3 missing values generated)
+
+{com}. format visitstolongtermcarehomeban %td
+{txt}
+{com}. 
+. gen nonessentialbusinessclosure = date( closednonessentialbusinesses , "DMY")
+{txt}(5 missing values generated)
+
+{com}. format nonessentialbusinessclosure   %td
+{txt}
+{com}. 
+. gen selfisolationfines = date(finesfornotrespectingselfisolati , "DMY")
+{txt}(1 missing value generated)
+
+{com}. format selfisolationfines %td
+{txt}
+{com}. 
+. gen restaurantrestrictions = date(restrictedrestaurantcapacity,"DMY")
+{txt}
+{com}. format restaurantrestrictions %td
+{txt}
+{com}. 
+. gen restaurantsclosed = date(closedrestaurantsexcepttakeout, "DMY")
+{txt}
+{com}. format restaurantsclosed %td
+{txt}
+{com}. 
+. gen interprovincialrestriction = date(restrictionsoninterprovincialter, "DMY")
+{txt}(5 missing values generated)
+
+{com}. format interprovincialrestriction %td
+{txt}
+{com}. 
+. gen intraprovincialrestriction = date(intraprovincialtravelrestriction, "DMY")
+{txt}(12 missing values generated)
+
+{com}. format intraprovincialrestriction %td
+{txt}
+{com}. 
+. encode provinceterritory , generate(province)
+{txt}
+{com}. 
+. set scheme s1color 
+{txt}
+{com}. 
+. twoway (dot stateofemergency schoolclosure visitstolongtermcarehomeban nonessentialbusinessclosure restaurantrestrictions selfisolationfines restaurantsclosed interprovincialrestriction intraprovincialrestriction  province, horizontal), ylabel(1 "Alberta" 2 "British Columbia" 3 "Manitoba" 4 "New Brunswick" 5 "Newfoundland and Labrador" 6 "Northwest Territories" 7 "Nova Scotia" 8 "Nunavut" 9  "Ontario" 10 "Prince Edward Island" 11 "Quebec" 12 "Saskatchewan" 13 "Yukon")
+{res}{txt}
+{com}. 
+. 
+. clear
+{txt}
+{com}. // import breton data
+. import delimited "C:\Users\anusha\Downloads\COVID19-Canada-Provinces-master\COVID19-Canada-Provinces-master\Data\Canada-COVID19-Stringency.csv", varnames(1) encoding(ISO-8859-2) 
+{res}{text}(28 vars, 4,965 obs)
+
+{com}. gen time = date(date, "YMD")
+{txt}
+{com}. format time %td
+{txt}
+{com}. keep if time <= td(19feb2021)
+{txt}(338 observations deleted)
+
+{com}. encode provinceterritory, generate(province)
+{txt}
+{com}. 
+. keep provinceterritory s3_schools s6_diningandrestaurants s7_nonessentialretailbusiness s8_nonessentialservices s9_culturalservicesandvenues s10_intratravel s11_intertravel time
+{txt}
+{com}. 
+. // policy strictness for each province
+. encode s9_culturalservicesandvenues , generate(cultural_services)
+{txt}
+{com}. replace cultural_services = 0 if cultural_services == 1
+{txt}(380 real changes made)
+
+{com}. replace cultural_services = 1 if cultural_services == 2
+{txt}(2,646 real changes made)
+
+{com}. replace cultural_services = 2 if cultural_services == 3
+{txt}(1,601 real changes made)
+
+{com}. 
+. encode s3_schools, generate(school_closures)
+{txt}
+{com}. replace school_closures = 0 if school_closures == 1
+{txt}(201 real changes made)
+
+{com}. replace school_closures = 1 if school_closures == 2
+{txt}(1,738 real changes made)
+
+{com}. replace school_closures = 2 if school_closures == 3
+{txt}(279 real changes made)
+
+{com}. replace school_closures = 3 if school_closures == 4
+{txt}(2,409 real changes made)
+
+{com}. 
+. encode s6_diningandrestaurants , generate(dining_and_restaurants)
+{txt}
+{com}. replace dining_and_restaurants = 0 if dining_and_restaurants == 1
+{txt}(441 real changes made)
+
+{com}. replace dining_and_restaurants = 1 if dining_and_restaurants == 2
+{txt}(2,888 real changes made)
+
+{com}. replace dining_and_restaurants = 2 if dining_and_restaurants == 3
+{txt}(1,298 real changes made)
+
+{com}. 
+. encode s7_nonessentialretailbusiness, generate(non_essential_businesses)
+{txt}
+{com}. replace non_essential_businesses = 0 if non_essential_businesses  == 1
+{txt}(542 real changes made)
+
+{com}. replace non_essential_businesses  = 1 if non_essential_businesses  == 2
+{txt}(3,353 real changes made)
+
+{com}. replace non_essential_businesses  = 2 if non_essential_businesses  == 3
+{txt}(732 real changes made)
+
+{com}. 
+. encode s8_nonessentialservices, generate(non_essential_services)
+{txt}
+{com}. replace non_essential_services = 0 if non_essential_services == 1
+{txt}(437 real changes made)
+
+{com}. replace non_essential_services = 1 if non_essential_services == 2
+{txt}(2,838 real changes made)
+
+{com}. replace non_essential_services = 2 if non_essential_services == 3
+{txt}(1,352 real changes made)
+
+{com}. 
+. encode s11_intertravel , generate(interprovincial_travel)
+{txt}
+{com}. replace interprovincial_travel = 0 if interprovincial_travel == 1
+{txt}(2,593 real changes made)
+
+{com}. replace interprovincial_travel = 1 if interprovincial_travel == 2
+{txt}(2,034 real changes made)
+
+{com}. 
+. encode s10_intratravel , generate(intraprovincial_travel)
+{txt}
+{com}. replace intraprovincial_travel = 0 if intraprovincial_travel == 1
+{txt}(3,026 real changes made)
+
+{com}. replace intraprovincial_travel = 1 if intraprovincial_travel == 2
+{txt}(1,601 real changes made)
+
+{com}. 
+. 
+. label variable cultural_services "cultural services"
+{txt}
+{com}. label variable school_closures "school closure"
+{txt}
+{com}. label variable dining_and_restaurants "dining and restaurants"
+{txt}
+{com}. label variable non_essential_businesses "non-essential retial businesses"
+{txt}
+{com}. label variable non_essential_services "non-essential services"
+{txt}
+{com}. label variable interprovincial_travel "interprovincial travel"
+{txt}
+{com}. label variable intraprovincial_travel "intraprovincial travel"
+{txt}
+{com}. 
+. // graphs for each province
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services interprovincial_travel time if provinceterritory == "Alberta"), title("Alberta")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "British Columbia"), title("British Columbia")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "Manitoba"), title("Manitoba")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "New Brunswick"), title("New Brunswick")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "Newfoundland and Labrador"),title("Newfoundland and Labrador")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "Northwest Territories"), title("Northwest Territories")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "Nova Scotia"), title("Nova Scotia")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "Nunavut"), title("Nunavut")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "Ontario"), title("Ontario")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "Prince Edward Island"), title("Prince Edward Island")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "Quebec"), title("Quebec")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "Saskatchewan"), title("Saskatchewan")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural_services school_closures dining_and_restaurants non_essential_businesses non_essential_services intraprovincial_travel interprovincial_travel time if provinceterritory == "Yukon"), title("Yukon")
+{res}{txt}
+{com}. 
+. 
+. clear
+{txt}
+{com}. // import reopenning data
+. import delimited "C:\Users\anusha\Desktop\eco446\covid_indicators_appended.csv"
+{res}{text}(11 vars, 1,994 obs)
+
+{com}. 
+. gen time = date(compiledate, "YMD")
+{txt}
+{com}. format time %td
+{txt}
+{com}. keep if time >= td(1mar2020) & time <= td(19feb2021)
+{txt}(156 observations deleted)
+
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "Alberta"), ylabel(1(1)5) title("Alberta")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "BritishColumbia"), ylabel(1(1)5) title("British Columbia")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "Manitoba"), ylabel(1(1)5) title("Manitoba")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "NewBrunswick"), ylabel(1(1)5) title("New Brunswick")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "NewfoundlandAndLabrador"), ylabel(1(1)5) title("Newfoundland And Labrador")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "NorthwestTerritories"), ylabel(1(1)5) title("Northwest Territories")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "NovaScotia"), ylabel(1(1)5) title("Nova Scotia")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "Nunavut"), ylabel(1(1)5) title("Nunavut")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "Ontario"), ylabel(1(1)5) title("Ontario")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "PrinceEdwardIsland"), ylabel(1(1)5) title("Prince Edward Island")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "Quebec"), ylabel(1(1)5) title("Quebec")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "Saskatchewan"), ylabel(1(1)5) title("Saskatchewan")
+{res}{txt}
+{com}. 
+. twoway (scatter cultural borders eateries schooling stores time if jurisdiction == "Yukon"), ylabel(1(1)5) title("Yukon")
+{res}{txt}
+{com}. 
+. 
+. // for overall smooth trend graphs from google and apple
+. 
+. //// parks_percent_change_from_baseli
+> clear
+{txt}
+{com}. // import the google data
+. import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+{res}{text}(15 vars, 91,403 obs)
+
+{com}. 
+. // change the date string variable to use in graphs
+. gen time = date(date, "YMD")
+{txt}
+{com}. format time %td
+{txt}
+{com}. 
+. keep iso_3166_2_code parks_percent_change_from_baseli time
+{txt}
+{com}. drop if missing(iso_3166_2_code)
+{txt}(86,692 observations deleted)
+
+{com}. 
+. encode iso_3166_2_code, gen(province)
+{txt}
+{com}. 
+. drop if iso_3166_2_code == "CA-PE" 
+{txt}(370 observations deleted)
+
+{com}. drop if iso_3166_2_code == "CA-YT"
+{txt}(325 observations deleted)
+
+{com}. drop if iso_3166_2_code == "CA-NU" 
+{txt}(291 observations deleted)
+
+{com}. drop if iso_3166_2_code == "CA-NT"
+{txt}(350 observations deleted)
+
+{com}. 
+. sepscatter parks_percent_change_from_baseli time, sep(province) recast(line) ///
+> legend(pos(3) col(1)) xtitle("time")
+{res}{txt}
+{com}. 
+. egen id = group(time)
+{txt}
+{com}. move id time
+{txt}
+{com}. drop iso_3166_2_code
+{txt}
+{com}. 
+. rename parks_percent_change_from_baseli x
+{res}{txt}
+{com}. reshape wide x, i(id) j(province)
+{txt}(note: j = 1 2 3 4 5 6 9 11 12)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}    3375   {txt}->{res}     375
+{txt}Number of variables            {res}       4   {txt}->{res}      11
+{txt}j variable (9 values)          {res}province   {txt}->   (dropped)
+xij variables:
+                                      {res}x   {txt}->   {res}x1 x2 ... x12
+{txt}{hline 77}
+
+{com}. 
+. tsset time
+{res}{txt}{col 9}time variable:  {res}{col 25}time, 15feb2020 to 23feb2021
+{txt}{col 17}delta:  {res}1 day
+{txt}
+{com}. 
+. //generate line graph for each state
+. local mygraph "`mygraph'"
+{txt}
+{com}. foreach var of varlist x1-x9 {c -(}
+{txt}  2{com}.     local mygraph "line `var' time if time>td(11mar2020) & time<td(01jun2020), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  3{com}.         local mygraph "line `var' time if time>=td(01jun2020) & time<td(01oct2020), lc(eltblue) lw(thin) ||  `mygraph'"
+{txt}  4{com}.         local mygraph "line `var' time if time>=td(01oct2020) & time<=td(23feb2021), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  5{com}. {c )-}
+{txt}
+{com}. 
+. egen ur_mean = rowmean(x1-x9)
+{txt}
+{com}. tssmooth ma ubar = ur_mean, w(7 0 0 )
+{txt}The smoother applied was
+{res}{p 5 5 5}(1/7)*[x(t-7) + x(t-6) + x(t-5) + x(t-4) + x(t-3) + x(t-2) + x(t-1) + 0*x(t)]; x(t)= ur_mean{p_end}
+{txt}
+{com}. line x1-x9 time , c(L) lc(gs13 ..) lw(thin ..)  /// 
+>     || `mygraph '  /// 
+>     || line ubar time , lw(medthick) lc(black) /// 
+>     ||, legend(off)     
+{res}{txt}
+{com}.         
+.         
+. //// grocery and pharmacy
+> clear
+{txt}
+{com}. // import the google data
+. import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+{res}{text}(15 vars, 91,403 obs)
+
+{com}. 
+. // change the date string variable to use in graphs
+. gen time = date(date, "YMD")
+{txt}
+{com}. format time %td
+{txt}
+{com}. 
+. keep iso_3166_2_code grocery_and_pharmacy_percent_cha time
+{txt}
+{com}. drop if missing(iso_3166_2_code)
+{txt}(86,692 observations deleted)
+
+{com}. 
+. encode iso_3166_2_code, gen(province)
+{txt}
+{com}. 
+. drop if iso_3166_2_code == "CA-NT" 
+{txt}(350 observations deleted)
+
+{com}. drop if iso_3166_2_code == "CA-YT"
+{txt}(325 observations deleted)
+
+{com}. drop if iso_3166_2_code == "CA-YT"
+{txt}(0 observations deleted)
+
+{com}. 
+. sepscatter grocery_and_pharmacy_percent_cha time, sep(province) recast(line) ///
+> legend(pos(3) col(1)) xtitle("time")
+{res}{txt}
+{com}. 
+. egen id = group(time)
+{txt}
+{com}. move id time
+{txt}
+{com}. drop iso_3166_2_code
+{txt}
+{com}. 
+. rename grocery_and_pharmacy_percent_cha x
+{res}{txt}
+{com}. reshape wide x, i(id) j(province)
+{txt}(note: j = 1 2 3 4 5 6 8 9 10 11 12)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}    4036   {txt}->{res}     375
+{txt}Number of variables            {res}       4   {txt}->{res}      13
+{txt}j variable (11 values)         {res}province   {txt}->   (dropped)
+xij variables:
+                                      {res}x   {txt}->   {res}x1 x2 ... x12
+{txt}{hline 77}
+
+{com}. 
+. tsset time
+{res}{txt}{col 9}time variable:  {res}{col 25}time, 15feb2020 to 23feb2021
+{txt}{col 17}delta:  {res}1 day
+{txt}
+{com}. 
+. //generate line graph for each state
+. local mygraph "`mygraph'"
+{txt}
+{com}. foreach var of varlist x1-x10 {c -(}
+{txt}  2{com}.     local mygraph "line `var' time if time>td(11mar2020) & time<td(01jun2020), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  3{com}.         local mygraph "line `var' time if time>=td(01jun2020) & time<td(01oct2020), lc(eltblue) lw(thin) ||  `mygraph'"
+{txt}  4{com}.         local mygraph "line `var' time if time>=td(01oct2020) & time<=td(23feb2021), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  5{com}. {c )-}
+{txt}
+{com}. 
+. egen ur_mean = rowmean(x1-x10)
+{txt}
+{com}. tssmooth ma ubar = ur_mean, w(7 0 0 )
+{txt}The smoother applied was
+{res}{p 5 5 5}(1/7)*[x(t-7) + x(t-6) + x(t-5) + x(t-4) + x(t-3) + x(t-2) + x(t-1) + 0*x(t)]; x(t)= ur_mean{p_end}
+{txt}
+{com}. line x1-x10 time , c(L) lc(gs13 ..) lw(thin ..)  /// 
+>     || `mygraph '  /// 
+>     || line ubar time , lw(medthick) lc(black) /// 
+>     ||, legend(off)
+{res}{txt}
+{com}.         
+. // retail and recreation
+. clear
+{txt}
+{com}. // import the google data
+. import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+{res}{text}(15 vars, 91,403 obs)
+
+{com}. 
+. set scheme s1color 
+{txt}
+{com}. 
+. // change the date string variable to use in graphs
+. gen time = date(date, "YMD")
+{txt}
+{com}. format time %td
+{txt}
+{com}. 
+. keep iso_3166_2_code retail_and_recreation_percent_ch time
+{txt}
+{com}. drop if missing(iso_3166_2_code)
+{txt}(86,692 observations deleted)
+
+{com}. 
+. describe
+
+{txt}Contains data
+  obs:{res}         4,711                          
+{txt} vars:{res}             3                          
+{txt}{hline}
+              storage   display    value
+variable name   type    format     label      variable label
+{hline}
+{p 0 48}{res}{bind:iso_3166_2_code}{txt}{bind: str5    }{bind:{txt}%9s       }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:retail_and_re~h}{txt}{bind: int     }{bind:{txt}%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}retail_and_recreation_percent_change_from_baseline{p_end}
+{p 0 48}{bind:time           }{txt}{bind: float   }{bind:{txt}%td       }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{txt}{hline}
+Sorted by: 
+{res}     Note: Dataset has changed since last saved.
+{txt}
+{com}. 
+. encode iso_3166_2_code, gen(province)
+{txt}
+{com}. egen id = group(time)
+{txt}
+{com}. move id time
+{txt}
+{com}. drop iso_3166_2_code
+{txt}
+{com}. 
+. rename retail_and_recreation_percent_ch x
+{res}{txt}
+{com}. reshape wide x, i(id) j(province)
+{txt}(note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}    4711   {txt}->{res}     375
+{txt}Number of variables            {res}       4   {txt}->{res}      15
+{txt}j variable (13 values)         {res}province   {txt}->   (dropped)
+xij variables:
+                                      {res}x   {txt}->   {res}x1 x2 ... x13
+{txt}{hline 77}
+
+{com}. 
+. tsset time
+{res}{txt}{col 9}time variable:  {res}{col 25}time, 15feb2020 to 23feb2021
+{txt}{col 17}delta:  {res}1 day
+{txt}
+{com}. 
+. //generate line graph for each state
+. local mygraph "`mygraph'"
+{txt}
+{com}. foreach var of varlist x1-x13 {c -(}
+{txt}  2{com}.     local mygraph "line `var' time if time>td(11mar2020) & time<td(01jun2020), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  3{com}.         local mygraph "line `var' time if time>=td(01jun2020) & time<td(01oct2020), lc(eltblue) lw(thin) ||  `mygraph'"
+{txt}  4{com}.         local mygraph "line `var' time if time>=td(01oct2020) & time<=td(23feb2021), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  5{com}. {c )-}
+{txt}
+{com}. 
+. egen ur_mean = rowmean(x1-x13)
+{txt}
+{com}. tssmooth ma ubar = ur_mean, w(7 0 0 )
+{txt}The smoother applied was
+{res}{p 5 5 5}(1/7)*[x(t-7) + x(t-6) + x(t-5) + x(t-4) + x(t-3) + x(t-2) + x(t-1) + 0*x(t)]; x(t)= ur_mean{p_end}
+{txt}
+{com}. line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  /// 
+>     || `mygraph '  /// 
+>     || line ubar time , lw(medthick) lc(black) /// 
+>     ||, legend(off)     
+{res}{txt}
+{com}. 
+.         
+. // workplaces_percent_change_from_b
+. clear
+{txt}
+{com}. // import the google data
+. import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+{res}{text}(15 vars, 91,403 obs)
+
+{com}. 
+. // change the date string variable to use in graphs
+. gen time = date(date, "YMD")
+{txt}
+{com}. format time %td
+{txt}
+{com}. 
+. keep iso_3166_2_code workplaces_percent_change_from_b time
+{txt}
+{com}. drop if missing(iso_3166_2_code)
+{txt}(86,692 observations deleted)
+
+{com}. 
+. encode iso_3166_2_code, gen(province)
+{txt}
+{com}. egen id = group(time)
+{txt}
+{com}. move id time
+{txt}
+{com}. drop iso_3166_2_code
+{txt}
+{com}. 
+. rename workplaces_percent_change_from_b x
+{res}{txt}
+{com}. reshape wide x, i(id) j(province)
+{txt}(note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}    4711   {txt}->{res}     375
+{txt}Number of variables            {res}       4   {txt}->{res}      15
+{txt}j variable (13 values)         {res}province   {txt}->   (dropped)
+xij variables:
+                                      {res}x   {txt}->   {res}x1 x2 ... x13
+{txt}{hline 77}
+
+{com}. 
+. tsset time
+{res}{txt}{col 9}time variable:  {res}{col 25}time, 15feb2020 to 23feb2021
+{txt}{col 17}delta:  {res}1 day
+{txt}
+{com}. 
+. //generate line graph for each state
+. local mygraph "`mygraph'"
+{txt}
+{com}. foreach var of varlist x1-x13 {c -(}
+{txt}  2{com}.     local mygraph "line `var' time if time>td(11mar2020) & time<td(01jun2020), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  3{com}.         local mygraph "line `var' time if time>=td(01jun2020) & time<td(01oct2020), lc(eltblue) lw(thin) ||  `mygraph'"
+{txt}  4{com}.         local mygraph "line `var' time if time>=td(01oct2020) & time<=td(23feb2021), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  5{com}. {c )-}
+{txt}
+{com}. 
+. egen ur_mean = rowmean(x1-x13)
+{txt}
+{com}. tssmooth ma ubar = ur_mean, w(7 0 0 )
+{txt}The smoother applied was
+{res}{p 5 5 5}(1/7)*[x(t-7) + x(t-6) + x(t-5) + x(t-4) + x(t-3) + x(t-2) + x(t-1) + 0*x(t)]; x(t)= ur_mean{p_end}
+{txt}
+{com}. line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  /// 
+>     || `mygraph '  /// 
+>     || line ubar time , lw(medthick) lc(black) /// 
+>     ||, legend(off)     
+{res}{txt}
+{com}. 
+. 
+. //residential_percent_change_from_
+. clear
+{txt}
+{com}. // import the google data
+. import delimited "C:\Users\anusha\Desktop\eco446\2020_CA_Region_Mobility_Report.csv"
+{res}{text}(15 vars, 91,403 obs)
+
+{com}. 
+. // change the date string variable to use in graphs
+. gen time = date(date, "YMD")
+{txt}
+{com}. format time %td
+{txt}
+{com}. 
+. keep iso_3166_2_code residential_percent_change_from_ time
+{txt}
+{com}. drop if missing(iso_3166_2_code)
+{txt}(86,692 observations deleted)
+
+{com}. 
+. encode iso_3166_2_code, gen(province)
+{txt}
+{com}. egen id = group(time)
+{txt}
+{com}. move id time
+{txt}
+{com}. drop iso_3166_2_code
+{txt}
+{com}. 
+. rename residential_percent_change_from_ x
+{res}{txt}
+{com}. reshape wide x, i(id) j(province)
+{txt}(note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}    4711   {txt}->{res}     375
+{txt}Number of variables            {res}       4   {txt}->{res}      15
+{txt}j variable (13 values)         {res}province   {txt}->   (dropped)
+xij variables:
+                                      {res}x   {txt}->   {res}x1 x2 ... x13
+{txt}{hline 77}
+
+{com}. 
+. tsset time
+{res}{txt}{col 9}time variable:  {res}{col 25}time, 15feb2020 to 23feb2021
+{txt}{col 17}delta:  {res}1 day
+{txt}
+{com}. 
+. //generate line graph for each state
+. local mygraph "`mygraph'"
+{txt}
+{com}. foreach var of varlist x1-x13 {c -(}
+{txt}  2{com}.     local mygraph "line `var' time if time>td(11mar2020) & time<td(01jun2020), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  3{com}.         local mygraph "line `var' time if time>=td(01jun2020) & time<td(01oct2020), lc(eltblue) lw(thin) ||  `mygraph'"
+{txt}  4{com}.         local mygraph "line `var' time if time>=td(01oct2020) & time<=td(23feb2021), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  5{com}. {c )-}
+{txt}
+{com}. 
+. egen ur_mean = rowmean(x1-x13)
+{txt}
+{com}. tssmooth ma ubar = ur_mean, w(7 0 0 )
+{txt}The smoother applied was
+{res}{p 5 5 5}(1/7)*[x(t-7) + x(t-6) + x(t-5) + x(t-4) + x(t-3) + x(t-2) + x(t-1) + 0*x(t)]; x(t)= ur_mean{p_end}
+{txt}
+{com}. line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  /// 
+>     || `mygraph '  /// 
+>     || line ubar time , lw(medthick) lc(black) /// 
+>     ||, legend(off)     
+{res}{txt}
+{com}.         
+. //trend 1 - driving
+. clear
+{txt}
+{com}. // import formatted apple data
+. import delimited "C:\Users\anusha\Desktop\eco446\Formatted-Apple-Mobility-Trends.csv"
+{res}{text}(6 vars, 20,550 obs)
+
+{com}. //change the date type
+. gen time = date(date, "MDY")
+{txt}
+{com}. format time %td
+{txt}
+{com}. keep if time >= td(1mar2020) & time <= td(19feb2021)
+{txt}(2,750 observations deleted)
+
+{com}. keep if region_type == ""
+{txt}(7,476 observations deleted)
+
+{com}. drop date region_type region_name 
+{txt}
+{com}. 
+. rename mobility_type type 
+{res}{txt}
+{com}. encode type, generate(mobility_type)
+{txt}
+{com}. drop type
+{txt}
+{com}. 
+. rename province prov
+{res}{txt}
+{com}. encode prov, generate(province)
+{txt}
+{com}. drop prov
+{txt}
+{com}. 
+. egen id = group(time province)
+{txt}
+{com}. 
+. reshape wide trend, i(id) j(mobility_type)
+{txt}(note: j = 1 2 3)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}   10324   {txt}->{res}    4628
+{txt}Number of variables            {res}       5   {txt}->{res}       6
+{txt}j variable (3 values)     {res}mobility_type   {txt}->   (dropped)
+xij variables:
+                                  {res}trend   {txt}->   {res}trend1 trend2 trend3
+{txt}{hline 77}
+
+{com}. drop id
+{txt}
+{com}. 
+. keep province trend1 time
+{txt}
+{com}. 
+. sepscatter trend1 time, sep(province) recast(line) ///
+> legend(pos(3) col(1)) xtitle("time") ytitle("Driving % Change")
+{res}{txt}
+{com}. 
+. egen id = group(time)
+{txt}
+{com}. move id time
+{txt}
+{com}. 
+. rename trend1 x
+{res}{txt}
+{com}. reshape wide x, i(id) j(province)
+{txt}(note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}    4628   {txt}->{res}     356
+{txt}Number of variables            {res}       4   {txt}->{res}      15
+{txt}j variable (13 values)         {res}province   {txt}->   (dropped)
+xij variables:
+                                      {res}x   {txt}->   {res}x1 x2 ... x13
+{txt}{hline 77}
+
+{com}. 
+. tsset time
+{res}{txt}{col 9}time variable:  {res}{col 25}time, 01mar2020 to 19feb2021
+{txt}{col 17}delta:  {res}1 day
+{txt}
+{com}. 
+. //generate line graph for each state
+. local mygraph "`mygraph'"
+{txt}
+{com}. foreach var of varlist x1-x13 {c -(}
+{txt}  2{com}.     local mygraph "line `var' time if time>td(11mar2020) & time<td(01jun2020), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  3{com}.         local mygraph "line `var' time if time>=td(01jun2020) & time<td(01oct2020), lc(eltblue) lw(thin) ||  `mygraph'"
+{txt}  4{com}.         local mygraph "line `var' time if time>=td(01oct2020) & time<=td(23feb2021), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  5{com}. {c )-}
+{txt}
+{com}. 
+. egen ur_mean = rowmean(x1-x13)
+{txt}(2 missing values generated)
+
+{com}. tssmooth ma ubar = ur_mean, w(7 0 0 )
+{txt}The smoother applied was
+{res}{p 5 5 5}(1/7)*[x(t-7) + x(t-6) + x(t-5) + x(t-4) + x(t-3) + x(t-2) + x(t-1) + 0*x(t)]; x(t)= ur_mean{p_end}
+{txt}
+{com}. line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  /// 
+>     || `mygraph '  /// 
+>     || line ubar time , lw(medthick) lc(black) /// 
+>     ||, legend(off)     
+{res}{txt}
+{com}. 
+. //trend 2 - transit
+. clear
+{txt}
+{com}. // import formatted apple data
+. import delimited "C:\Users\anusha\Desktop\eco446\Formatted-Apple-Mobility-Trends.csv"
+{res}{text}(6 vars, 20,550 obs)
+
+{com}. //change the date type
+. gen time = date(date, "MDY")
+{txt}
+{com}. format time %td
+{txt}
+{com}. keep if time >= td(1mar2020) & time <= td(19feb2021)
+{txt}(2,750 observations deleted)
+
+{com}. keep if region_type == ""
+{txt}(7,476 observations deleted)
+
+{com}. drop date region_type region_name 
+{txt}
+{com}. 
+. rename mobility_type type 
+{res}{txt}
+{com}. encode type, generate(mobility_type)
+{txt}
+{com}. drop type
+{txt}
+{com}. 
+. rename province prov
+{res}{txt}
+{com}. encode prov, generate(province)
+{txt}
+{com}. drop prov
+{txt}
+{com}. 
+. egen id = group(time province)
+{txt}
+{com}. 
+. reshape wide trend, i(id) j(mobility_type)
+{txt}(note: j = 1 2 3)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}   10324   {txt}->{res}    4628
+{txt}Number of variables            {res}       5   {txt}->{res}       6
+{txt}j variable (3 values)     {res}mobility_type   {txt}->   (dropped)
+xij variables:
+                                  {res}trend   {txt}->   {res}trend1 trend2 trend3
+{txt}{hline 77}
+
+{com}. drop id
+{txt}
+{com}. 
+. keep province trend2 time
+{txt}
+{com}. 
+. sepscatter trend2 time, sep(province) recast(line) ///
+> legend(pos(3) col(1)) xtitle("time") ytitle("Transit % Change")
+{res}{txt}
+{com}. 
+. egen id = group(time)
+{txt}
+{com}. move id time
+{txt}
+{com}. 
+. rename trend2 x
+{res}{txt}
+{com}. reshape wide x, i(id) j(province)
+{txt}(note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}    4628   {txt}->{res}     356
+{txt}Number of variables            {res}       4   {txt}->{res}      15
+{txt}j variable (13 values)         {res}province   {txt}->   (dropped)
+xij variables:
+                                      {res}x   {txt}->   {res}x1 x2 ... x13
+{txt}{hline 77}
+
+{com}. 
+. tsset time
+{res}{txt}{col 9}time variable:  {res}{col 25}time, 01mar2020 to 19feb2021
+{txt}{col 17}delta:  {res}1 day
+{txt}
+{com}. 
+. //generate line graph for each state
+. local mygraph "`mygraph'"
+{txt}
+{com}. foreach var of varlist x1-x13 {c -(}
+{txt}  2{com}.     local mygraph "line `var' time if time>td(11mar2020) & time<td(01jun2020), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  3{com}.         local mygraph "line `var' time if time>=td(01jun2020) & time<td(01oct2020), lc(eltblue) lw(thin) ||  `mygraph'"
+{txt}  4{com}.         local mygraph "line `var' time if time>=td(01oct2020) & time<=td(23feb2021), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  5{com}. {c )-}
+{txt}
+{com}. 
+. egen ur_mean = rowmean(x1-x13)
+{txt}
+{com}. tssmooth ma ubar = ur_mean, w(7 0 0 )
+{txt}The smoother applied was
+{res}{p 5 5 5}(1/7)*[x(t-7) + x(t-6) + x(t-5) + x(t-4) + x(t-3) + x(t-2) + x(t-1) + 0*x(t)]; x(t)= ur_mean{p_end}
+{txt}
+{com}. line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  /// 
+>     || `mygraph '  /// 
+>     || line ubar time , lw(medthick) lc(black) /// 
+>     ||, legend(off)     
+{res}{txt}
+{com}. 
+.         
+. //trend 3 - walking
+. clear
+{txt}
+{com}. // import formatted apple data
+. import delimited "C:\Users\anusha\Desktop\eco446\Formatted-Apple-Mobility-Trends.csv"
+{res}{text}(6 vars, 20,550 obs)
+
+{com}. //change the date type
+. gen time = date(date, "MDY")
+{txt}
+{com}. format time %td
+{txt}
+{com}. keep if time >= td(1mar2020) & time <= td(19feb2021)
+{txt}(2,750 observations deleted)
+
+{com}. keep if region_type == ""
+{txt}(7,476 observations deleted)
+
+{com}. drop date region_type region_name 
+{txt}
+{com}. 
+. rename mobility_type type 
+{res}{txt}
+{com}. encode type, generate(mobility_type)
+{txt}
+{com}. drop type
+{txt}
+{com}. 
+. rename province prov
+{res}{txt}
+{com}. encode prov, generate(province)
+{txt}
+{com}. drop prov
+{txt}
+{com}. 
+. egen id = group(time province)
+{txt}
+{com}. 
+. reshape wide trend, i(id) j(mobility_type)
+{txt}(note: j = 1 2 3)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}   10324   {txt}->{res}    4628
+{txt}Number of variables            {res}       5   {txt}->{res}       6
+{txt}j variable (3 values)     {res}mobility_type   {txt}->   (dropped)
+xij variables:
+                                  {res}trend   {txt}->   {res}trend1 trend2 trend3
+{txt}{hline 77}
+
+{com}. drop id
+{txt}
+{com}. 
+. keep province trend3 time
+{txt}
+{com}. 
+. egen id = group(time)
+{txt}
+{com}. move id time
+{txt}
+{com}. 
+. rename trend3 x
+{res}{txt}
+{com}. reshape wide x, i(id) j(province)
+{txt}(note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13)
+
+Data{col 36}long{col 43}->{col 48}wide
+{hline 77}
+Number of obs.                 {res}    4628   {txt}->{res}     356
+{txt}Number of variables            {res}       4   {txt}->{res}      15
+{txt}j variable (13 values)         {res}province   {txt}->   (dropped)
+xij variables:
+                                      {res}x   {txt}->   {res}x1 x2 ... x13
+{txt}{hline 77}
+
+{com}. 
+. tsset time
+{res}{txt}{col 9}time variable:  {res}{col 25}time, 01mar2020 to 19feb2021
+{txt}{col 17}delta:  {res}1 day
+{txt}
+{com}. 
+. //generate line graph for each state
+. local mygraph "`mygraph'"
+{txt}
+{com}. foreach var of varlist x1-x13 {c -(}
+{txt}  2{com}.     local mygraph "line `var' time if time>td(11mar2020) & time<td(01jun2020), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  3{com}.         local mygraph "line `var' time if time>=td(01jun2020) & time<td(01oct2020), lc(eltblue) lw(thin) ||  `mygraph'"
+{txt}  4{com}.         local mygraph "line `var' time if time>=td(01oct2020) & time<=td(23feb2021), lc(erose) lw(thin) ||  `mygraph'"
+{txt}  5{com}. {c )-}
+{txt}
+{com}. 
+. egen ur_mean = rowmean(x1-x13)
+{txt}
+{com}. tssmooth ma ubar = ur_mean, w(7 0 0 )
+{txt}The smoother applied was
+{res}{p 5 5 5}(1/7)*[x(t-7) + x(t-6) + x(t-5) + x(t-4) + x(t-3) + x(t-2) + x(t-1) + 0*x(t)]; x(t)= ur_mean{p_end}
+{txt}
+{com}. line x1-x13 time , c(L) lc(gs13 ..) lw(thin ..)  /// 
+>     || `mygraph '  /// 
+>     || line ubar time , lw(medthick) lc(black) /// 
+>     ||, legend(off)     
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\anusha\Desktop\eco446\graphs for final project log file.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 9 Apr 2021, 00:19:10
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

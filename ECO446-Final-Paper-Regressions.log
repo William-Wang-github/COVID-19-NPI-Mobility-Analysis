@@ -1,0 +1,2683 @@
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\hatho\Downloads\ECO446 Final Paper Regression.log
+  log type:  text
+ opened on:   8 Apr 2021, 23:36:01
+
+. 
+. /// appending datasets
+> 
+. clear
+
+. // import formatted apple data
+. import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\Formatted-Apple-Mobility-Trends.csv"
+(6 vars, 20,550 obs)
+
+. //change the date type
+. gen time = date(date, "MDY")
+
+. format time %td
+
+. keep if time >= td(1mar2020) & time <= td(19feb2021)
+(2,750 observations deleted)
+
+. keep if region_type == ""
+(7,476 observations deleted)
+
+. drop date region_type region_name 
+
+. 
+. rename mobility_type type 
+
+. encode type, generate(mobility_type)
+
+. drop type
+
+. 
+. rename province prov
+
+. encode prov, generate(province)
+
+. drop prov
+
+. 
+. move trend mobility_type
+
+. move time mobility_type
+
+. move time trend
+
+. move province mobility_type
+
+. 
+. save "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\apple_append.dta", replace
+file C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\apple_append.dta saved
+
+. 
+. 
+. clear
+
+. // import the google data
+. import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\2020_CA_Region_Mobility_Report.csv"
+(15 vars, 91,403 obs)
+
+. // change the date string variable to use in graphs
+. gen time = date(date, "YMD")
+
+. format time %td
+
+. keep if time >= td(1mar2020) & time <= td(19feb2021)
+(4,411 observations deleted)
+
+. keep sub_region_1 iso_3166_2_code retail_and_recreation_percent_ch grocery_and_pharmacy_percent_cha parks_percent_change_from_baseli transit_stations_percent_change_ workplaces_percent_change_from_b residential_percent_c
+> hange_from_ time
+
+. drop if missing(iso_3166_2_code)
+(82,524 observations deleted)
+
+. rename sub_region_1 prov
+
+. drop iso_3166_2_code
+
+. encode prov, generate(province)
+
+. drop prov
+
+. 
+. rename retail_and_recreation_percent_ch x1111
+
+. rename grocery_and_pharmacy_percent_cha x2222
+
+. rename parks_percent_change_from_baseli x3333
+
+. rename transit_stations_percent_change_ x4444
+
+. rename workplaces_percent_change_from_b x5555
+
+. rename residential_percent_change_from_ x6666
+
+. 
+. gen id = _n
+
+. reshape long x, i(id) j(mobility_type)
+(note: j = 1111 2222 3333 4444 5555 6666)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                     4468   ->   26808
+Number of variables                   9   ->       5
+j variable (6 values)                     ->   mobility_type
+xij variables:
+                  x1111 x2222 ... x6666   ->   x
+-----------------------------------------------------------------------------
+
+. drop id
+
+. 
+. move province mobility_type
+
+. rename x trend
+
+. 
+. save "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\google_append.dta", replace
+file C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\google_append.dta saved
+
+. 
+. 
+. clear
+
+. // import breton data
+. import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\COVID19-Canada-Provinces-master\Data\Canada-COVID19-Stringency.csv", varnames(1) encoding(ISO-8859-2) 
+(28 vars, 4,965 obs)
+
+. gen time = date(date, "YMD")
+
+. format time %td
+
+. keep if time <= td(19feb2021)
+(338 observations deleted)
+
+. encode provinceterritory, generate(province)
+
+. 
+. drop provinceterritory date stringencyindex v1
+
+. drop s1_flag s2_flag s3_flag s4_flag s5_flag s6_flag s7_flag s8_flag s9_flag s10_flag s11_flag s12_flag
+
+. 
+. encode s1_gathering, generate(x1000)
+
+. encode s2_maskspublic, generate(x2000)
+
+. encode s3_schools, generate(x3000)
+
+. encode s4_masksschools, generate(x4000)
+
+. encode s5_carehomevisitation, generate(x5000)
+
+. encode s6_diningandrestaurants, generate(x6000)
+
+. encode s7_nonessentialretailbusiness, generate(x7000)
+
+. encode s8_nonessentialservices, generate(x8000)
+
+. encode s9_culturalservicesandvenues, generate(x9000)
+
+. encode s10_intratravel, generate(x10000)
+
+. encode s11_intertravel, generate(x11000)
+
+. encode s12_curfew, generate(x12000)
+
+. 
+. drop s1_gathering s2_maskspublic s3_schools s4_masksschools s6_diningandrestaurants s5_carehomevisitation s7_nonessentialretailbusiness s8_nonessentialservices s9_culturalservicesandvenues s10_intratravel s11_intertravel
+>  s12_curfew
+
+. 
+. gen id = _n
+
+. reshape long x, i(id) j(mobility_type)
+(note: j = 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000 11000 12000)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                     4627   ->   55524
+Number of variables                  15   ->       5
+j variable (12 values)                    ->   mobility_type
+xij variables:
+                 x1000 x2000 ... x12000   ->   x
+-----------------------------------------------------------------------------
+
+. 
+. drop id
+
+. 
+. move province mobility_type
+
+. move time x
+
+. rename x trend
+
+. 
+. save "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\breton_append.dta", replace
+file C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\breton_append.dta saved
+
+. 
+. clear
+
+. // import reopenning data
+. import delimited "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\covid_indicators_appended.csv"
+(11 vars, 1,994 obs)
+
+. 
+. gen time = date(compiledate, "YMD")
+
+. format time %td
+
+. keep if time >= td(1mar2020) & time <= td(19feb2021)
+(156 observations deleted)
+
+. 
+. keep if jurisdiction == "Alberta" | jurisdiction =="BritishColumbia" | jurisdiction =="Manitoba" | jurisdiction =="NewBrunswick" | jurisdiction =="NewfoundlandAndLabrador" | jurisdiction =="NorthwestTerritories" | jurisd
+> iction == "NovaScotia" | jurisdiction =="Nunavut" | jurisdiction =="Ontario" | jurisdiction =="PrinceEdwardIsland" | jurisdiction =="Quebec" | jurisdiction =="Saskatchewan" | jurisdiction =="Yukon"
+(1,399 observations deleted)
+
+. 
+. encode jurisdiction, generate(province)
+
+. drop jurisdiction compiledate
+
+. 
+. rename cultural x13000
+
+. rename borders x14000
+
+. rename gatherings x15000
+
+. rename manufacturing x16000
+
+. rename contact x17000
+
+. rename leisure x18000
+
+. rename eateries x19000
+
+. rename schooling x20000
+
+. rename stores x21000
+
+. 
+. gen id = _n
+
+. reshape long x, i(id) j(mobility_type)
+(note: j = 13000 14000 15000 16000 17000 18000 19000 20000 21000)
+
+Data                               wide   ->   long
+-----------------------------------------------------------------------------
+Number of obs.                      439   ->    3951
+Number of variables                  12   ->       5
+j variable (9 values)                     ->   mobility_type
+xij variables:
+               x13000 x14000 ... x21000   ->   x
+-----------------------------------------------------------------------------
+
+. 
+. drop id
+
+. move province mobility_type
+
+. 
+. rename x trend
+
+. 
+. 
+. save "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\reopeningcovid_append.dta", replace
+file C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\reopeningcovid_append.dta saved
+
+. 
+. 
+. clear
+
+. append using "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\apple_append.dta" "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\breton_appe
+> nd.dta" "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\google_append.dta" "C:\Users\hatho\Desktop\University Stuff\Economics\ECO446\Research Paper Data\Covid Data\reopeningcovid_
+> append.dta"
+(note: variable trend was float, now double to accommodate using data's values)
+(label province already defined)
+(label province already defined)
+(label province already defined)
+
+. 
+. egen id = group(time province)
+
+. rename trend x
+
+. 
+. reshape wide x, i(id) j(mobility_type)
+(note: j = 1 2 3 1000 1111 2000 2222 3000 3333 4000 4444 5000 5555 6000 6666 7000 8000 9000 10000 11000 12000 13000 14000 15000 16000 17000 18000 19000 20000 21000)
+
+Data                               long   ->   wide
+-----------------------------------------------------------------------------
+Number of obs.                    96607   ->    4628
+Number of variables                   5   ->      33
+j variable (30 values)    mobility_type   ->   (dropped)
+xij variables:
+                                      x   ->   x1 x2 ... x21000
+-----------------------------------------------------------------------------
+
+. 
+. rename x1 driving
+
+. rename x2 transit
+
+. rename x3 walking
+
+. rename x1111 retail_and_recreation_percent_ch 
+
+. rename x2222 grocery_and_pharmacy_percent_cha 
+
+. rename x3333 parks_percent_change_from_baseli 
+
+. rename x4444 transit_stations_percent_change_ 
+
+. rename x5555 workplaces_percent_change_from_b 
+
+. rename x6666 residential_percent_change_from_ 
+
+. rename x1000 s1_gathering
+
+. rename x2000 maskspublic
+
+. rename x3000 schools
+
+. rename x4000 masksschools
+
+. rename x5000 carehomevisitation
+
+. rename x6000 diningandrestaurants
+
+. rename x7000 nonessentialretailbusiness
+
+. rename x8000 nonessentialservices
+
+. rename x9000 culturalservicesandvenues
+
+. rename x10000 intratravel
+
+. rename x11000 intertravel
+
+. rename x12000 curfew
+
+. rename x13000 cultural
+
+. rename x14000 borders
+
+. rename x15000 gatherings
+
+. rename x16000 manufacturing 
+
+. rename x17000 contact
+
+. rename x18000 leisure
+
+. rename x19000 eateries
+
+. rename x20000 schooling
+
+. rename x21000 stores
+
+. 
+. gen wave = 1 if inrange(time, mdy(3,1,2020), mdy(6,1,2020))
+(3,419 missing values generated)
+
+.         replace wave = 0 if inrange(time, mdy(6,2,2020), mdy(10,1,2020))
+(1,586 real changes made)
+
+.         replace wave = 2 if wave == .
+(1,833 real changes made)
+
+. 
+. // install following packages for this: reghdfe and ftools, using ssc install ___(pkg name)___
+.         
+.         
+. // Breton Main Regressions Overall
+. reghdfe driving i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province, a(time) keepsing
+WARNING: Singleton observations not dropped; statistical significance is biased (link)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      4,247
+Absorbing 1 HDFE group                            F(  24,   3869) =     255.29
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8687
+                                                  Adj R-squared   =     0.8559
+                                                  Within R-sq.    =     0.6129
+                                                  Root MSE        =    18.8651
+
+--------------------------------------------------------------------------------------------
+                   driving |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -4.165243   2.792772    -1.49   0.136    -9.640688    1.310202
+                        3  |  -9.913317   3.133104    -3.16   0.002    -16.05601   -3.770624
+                           |
+      nonessentialservices |
+                        2  |    4.96474   4.319131     1.15   0.250     -3.50325    13.43273
+                        3  |   3.837908    4.26397     0.90   0.368    -4.521934    12.19775
+                           |
+ culturalservicesandvenues |
+                        2  |  -12.14655   4.175347    -2.91   0.004    -20.33264   -3.960455
+                        3  |  -10.05939   4.106011    -2.45   0.014    -18.10954   -2.009233
+                           |
+                   schools |
+                        2  |   5.712892   5.043758     1.13   0.257    -4.175785    15.60157
+                        3  |   12.71354   5.149381     2.47   0.014     2.617783     22.8093
+                        4  |   13.04624   4.676855     2.79   0.005     3.876906    22.21558
+                           |
+             2.intertravel |   7.412617   1.453653     5.10   0.000     4.562617    10.26262
+             2.intratravel |   7.672573   1.096733     7.00   0.000     5.522344    9.822802
+                           |
+      diningandrestaurants |
+                        2  |  -13.35774   2.102671    -6.35   0.000    -17.48019   -9.235295
+                        3  |  -19.32638   2.164404    -8.93   0.000    -23.56986    -15.0829
+                           |
+                  province |
+         British Columbia  |   -11.8116   1.724549    -6.85   0.000    -15.19271   -8.430489
+                 Manitoba  |  -5.288362   2.101378    -2.52   0.012    -9.408277   -1.168447
+            New Brunswick  |   16.08399   1.995209     8.06   0.000     12.17222    19.99575
+Newfoundland and Labrador  |   14.89475   1.942803     7.67   0.000     11.08573    18.70377
+    Northwest Territories  |  -50.46058   1.503187   -33.57   0.000    -53.40769   -47.51347
+              Nova Scotia  |  -.1371372   2.437858    -0.06   0.955    -4.916746    4.642472
+                  Ontario  |  -11.38251   1.571086    -7.24   0.000    -14.46275   -8.302277
+     Prince Edward Island  |   40.54944   2.028953    19.99   0.000     36.57152    44.52736
+                   Quebec  |  -17.87165   1.737911   -10.28   0.000    -21.27896   -14.46435
+             Saskatchewan  |   .8211807     2.2068     0.37   0.710    -3.505422    5.147783
+          Yukon Territory  |   8.717124   1.517079     5.75   0.000     5.742774    11.69147
+                           |
+                     _cons |    128.862   5.891133    21.87   0.000     117.3119     140.412
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       354           0         354     |
+-----------------------------------------------------+
+
+. 
+. reghdfe walking i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      3,203
+Absorbing 1 HDFE group                            F(  21,   2826) =     370.24
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9047
+                                                  Adj R-squared   =     0.8921
+                                                  Within R-sq.    =     0.7334
+                                                  Root MSE        =    16.2082
+
+--------------------------------------------------------------------------------------------
+                   walking |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -5.360605   2.783643    -1.93   0.054    -10.81878    .0975719
+                        3  |  -6.955647   3.182458    -2.19   0.029    -13.19582   -.7154716
+                           |
+      nonessentialservices |
+                        2  |   9.490921   4.327433     2.19   0.028     1.005675    17.97617
+                        3  |   6.264286   4.318921     1.45   0.147    -2.204271    14.73284
+                           |
+ culturalservicesandvenues |
+                        2  |  -1.275633   5.665848    -0.23   0.822    -12.38525    9.833984
+                        3  |  -2.881547   5.713844    -0.50   0.614    -14.08527    8.322181
+                           |
+                   schools |
+                        2  |   8.324715   5.681599     1.47   0.143    -2.815785    19.46522
+                        3  |   11.58442   5.734979     2.02   0.043     .3392515    22.82959
+                        4  |   12.11521   5.406312     2.24   0.025     1.514488    22.71592
+                           |
+             2.intertravel |     18.348   1.581769    11.60   0.000     15.24646    21.44954
+             2.intratravel |  -2.788565   1.162373    -2.40   0.017     -5.06775   -.5093789
+                           |
+      diningandrestaurants |
+                        2  |  -21.73973   1.892008   -11.49   0.000    -25.44959   -18.02988
+                        3  |  -29.64544   1.956286   -15.15   0.000    -33.48133   -25.80954
+                           |
+                  province |
+         British Columbia  |  -29.12889   1.609414   -18.10   0.000    -32.28464   -25.97315
+                 Manitoba  |  -41.00245   2.108816   -19.44   0.000    -45.13743   -36.86748
+            New Brunswick  |   3.644492   1.937972     1.88   0.060    -.1554899    7.444474
+Newfoundland and Labrador  |  -10.29844     1.8581    -5.54   0.000    -13.94181   -6.655067
+              Nova Scotia  |  -43.87049   2.362865   -18.57   0.000    -48.50361   -39.23738
+                  Ontario  |  -49.81259   1.374688   -36.24   0.000    -52.50808    -47.1171
+                   Quebec  |  -46.13381    1.63635   -28.19   0.000    -49.34237   -42.92525
+             Saskatchewan  |  -13.37329   2.275665    -5.88   0.000    -17.83542   -8.911154
+                           |
+                     _cons |   156.4294   8.745239    17.89   0.000     139.2817    173.5771
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       356           0         356     |
+-----------------------------------------------------+
+
+. 
+. reghdfe transit i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      2,491
+Absorbing 1 HDFE group                            F(  19,   2116) =     216.91
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9253
+                                                  Adj R-squared   =     0.9121
+                                                  Within R-sq.    =     0.6607
+                                                  Root MSE        =     5.3875
+
+--------------------------------------------------------------------------------------------
+                   transit |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |   3.295733   1.043751     3.16   0.002     1.248848    5.342618
+                        3  |  -1.606942   1.200526    -1.34   0.181    -3.961276     .747392
+                           |
+      nonessentialservices |
+                        2  |   6.107877   1.618816     3.77   0.000     2.933239    9.282515
+                        3  |   3.061902   1.619485     1.89   0.059    -.1140473    6.237851
+                           |
+ culturalservicesandvenues |
+                        2  |   .6475382   2.176194     0.30   0.766    -3.620166    4.915242
+                        3  |   1.567862   2.187363     0.72   0.474    -2.721745    5.857469
+                           |
+                   schools |
+                        2  |  -4.850542   2.015064    -2.41   0.016    -8.802257   -.8988284
+                        3  |  -6.526227   2.025582    -3.22   0.001    -10.49857   -2.553887
+                        4  |  -5.805919   1.914946    -3.03   0.002    -9.561293   -2.050546
+                           |
+             2.intertravel |   1.162818   .6804213     1.71   0.088    -.1715465    2.497182
+             2.intratravel |  -.9196884   .4191786    -2.19   0.028    -1.741734   -.0976432
+                           |
+      diningandrestaurants |
+                        2  |  -13.63726    .647184   -21.07   0.000    -14.90645   -12.36808
+                        3  |  -16.98927   .6774183   -25.08   0.000    -18.31775    -15.6608
+                           |
+                  province |
+         British Columbia  |  -9.965185   .5575445   -17.87   0.000    -11.05858   -8.871792
+                 Manitoba  |   4.222418   .7997619     5.28   0.000     2.654016    5.790819
+              Nova Scotia  |  -3.762708   .8965977    -4.20   0.000    -5.521013   -2.004403
+                  Ontario  |  -9.071562    .474178   -19.13   0.000    -10.00147   -8.141659
+                   Quebec  |  -1.588248   .5670156    -2.80   0.005    -2.700215   -.4762822
+             Saskatchewan  |  -2.337405   .8643205    -2.70   0.007    -4.032412   -.6423989
+                           |
+                     _cons |   62.33176   3.240149    19.24   0.000     55.97755    68.68597
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       356           0         356     |
+-----------------------------------------------------+
+
+. 
+. reghdfe workplaces_percent_change_from_b i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      4,425
+Absorbing 1 HDFE group                            F(  25,   4044) =     214.68
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8890
+                                                  Adj R-squared   =     0.8786
+                                                  Within R-sq.    =     0.5703
+                                                  Root MSE        =     6.5417
+
+--------------------------------------------------------------------------------------------
+workplaces_percent_chang~b |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |    2.18262   .9657583     2.26   0.024     .2892023    4.076039
+                        3  |  -.2431216   1.089423    -0.22   0.823    -2.378991    1.892748
+                           |
+      nonessentialservices |
+                        2  |  -3.600628   1.417844    -2.54   0.011    -6.380383   -.8208738
+                        3  |  -5.040159   1.419452    -3.55   0.000    -7.823066   -2.257251
+                           |
+ culturalservicesandvenues |
+                        2  |   .3446908   1.235557     0.28   0.780    -2.077681    2.767063
+                        3  |  -.8529456   1.220113    -0.70   0.485    -3.245039    1.539148
+                           |
+                   schools |
+                        2  |   3.095974   1.763559     1.76   0.079     -.361573    6.553522
+                        3  |   1.333429   1.791965     0.74   0.457     -2.17981    4.846667
+                        4  |    .677153   1.622357     0.42   0.676    -2.503561    3.857867
+                           |
+             2.intertravel |   1.912709   .4820791     3.97   0.000     .9675682    2.857849
+             2.intratravel |  -1.741531   .3726268    -4.67   0.000    -2.472085   -1.010977
+                           |
+      diningandrestaurants |
+                        2  |  -1.098963    .658003    -1.67   0.095    -2.389011    .1910854
+                        3  |  -3.115646   .6948041    -4.48   0.000    -4.477844   -1.753447
+                           |
+                  province |
+         British Columbia  |   -.707255   .5938904    -1.19   0.234    -1.871607    .4570973
+                 Manitoba  |   2.844878   .7060506     4.03   0.000      1.46063    4.229126
+            New Brunswick  |     .99843   .6749812     1.48   0.139    -.3249048    2.321765
+Newfoundland and Labrador  |    10.4802   .6593542    15.89   0.000     9.187506     11.7729
+    Northwest Territories  |    7.84682   .5316979    14.76   0.000     6.804399    8.889241
+              Nova Scotia  |   -.044342   .7951715    -0.06   0.956    -1.603316    1.514632
+                  Nunavut  |   23.28744   .6958316    33.47   0.000     21.92323    24.65166
+                  Ontario  |  -2.477514   .5382127    -4.60   0.000    -3.532708   -1.422321
+     Prince Edward Island  |    6.77638   .6915733     9.80   0.000     5.420516    8.132245
+                   Quebec  |  -.3323194   .5975366    -0.56   0.578     -1.50382    .8391814
+             Saskatchewan  |   6.600233   .7589988     8.70   0.000     5.112178    8.088289
+          Yukon Territory  |   11.33665   .5662473    20.02   0.000     10.22649    12.44681
+                           |
+                     _cons |  -29.90981   1.864659   -16.04   0.000    -33.56557   -26.25405
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       356           0         356     |
+-----------------------------------------------------+
+
+. 
+. reghdfe retail_and_recreation_percent_ch i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      4,098
+Absorbing 1 HDFE group                            F(  25,   3717) =     178.16
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8342
+                                                  Adj R-squared   =     0.8172
+                                                  Within R-sq.    =     0.5451
+                                                  Root MSE        =     8.4090
+
+--------------------------------------------------------------------------------------------
+retail_and_recreation_pe~h |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -.5374617   1.265391    -0.42   0.671    -3.018391    1.943468
+                        3  |  -8.625612    1.45029    -5.95   0.000    -11.46905    -5.78217
+                           |
+      nonessentialservices |
+                        2  |   .1183685   1.975825     0.06   0.952    -3.755439    3.992176
+                        3  |  -3.731507   1.969661    -1.89   0.058     -7.59323    .1302156
+                           |
+ culturalservicesandvenues |
+                        2  |  -1.949232   1.880338    -1.04   0.300    -5.635828    1.737363
+                        3  |  -2.070539   1.848662    -1.12   0.263     -5.69503    1.553952
+                           |
+                   schools |
+                        2  |   3.440279   2.275406     1.51   0.131    -1.020888    7.901446
+                        3  |   3.321096    2.30923     1.44   0.150    -1.206385    7.848577
+                        4  |   .1982045   2.077235     0.10   0.924    -3.874427    4.270836
+                           |
+             2.intertravel |   4.847349   .6713252     7.22   0.000     3.531147    6.163551
+             2.intratravel |   .4739945   .5287167     0.90   0.370    -.5626088    1.510598
+                           |
+      diningandrestaurants |
+                        2  |  -4.207781   .9379225    -4.49   0.000    -6.046674   -2.368888
+                        3  |  -8.832563   .9772731    -9.04   0.000    -10.74861   -6.916519
+                           |
+                  province |
+         British Columbia  |  -4.147339   .7939037    -5.22   0.000    -5.703868   -2.590809
+                 Manitoba  |   -1.04498   .9572371    -1.09   0.275    -2.921741    .8317817
+            New Brunswick  |   3.721974   .9042591     4.12   0.000     1.949082    5.494867
+Newfoundland and Labrador  |   10.01032   .8772486    11.41   0.000     8.290382    11.73025
+    Northwest Territories  |  -9.953357   .7207988   -13.81   0.000    -11.36656   -8.540157
+              Nova Scotia  |  -.0864639   1.107598    -0.08   0.938    -2.258024    2.085096
+                  Nunavut  |   5.796038   1.905864     3.04   0.002     2.059397    9.532679
+                  Ontario  |   -2.51973   .6996457    -3.60   0.000    -3.891457   -1.148003
+     Prince Edward Island  |   10.17058   .9278846    10.96   0.000     8.351369     11.9898
+                   Quebec  |  -4.711901    .796143    -5.92   0.000    -6.272821   -3.150981
+             Saskatchewan  |   .1112607   1.019845     0.11   0.913     -1.88825    2.110771
+          Yukon Territory  |  -11.20507   .7169366   -15.63   0.000     -12.6107   -9.799444
+                           |
+                     _cons |   -14.9062   2.689587    -5.54   0.000    -20.17941   -9.632991
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       356           0         356     |
+-----------------------------------------------------+
+
+. 
+. reghdfe grocery_and_pharmacy_percent_cha i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      3,613
+Absorbing 1 HDFE group                            F(  24,   3233) =      34.70
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.7466
+                                                  Adj R-squared   =     0.7168
+                                                  Within R-sq.    =     0.2048
+                                                  Root MSE        =     8.3560
+
+--------------------------------------------------------------------------------------------
+grocery_and_pharmacy_per~a |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |    4.12672   1.350385     3.06   0.002     1.479022    6.774417
+                        3  |   1.154182   1.546301     0.75   0.455    -1.877647    4.186012
+                           |
+      nonessentialservices |
+                        2  |   2.038061   2.016275     1.01   0.312    -1.915247    5.991368
+                        3  |  -1.365176   2.009286    -0.68   0.497    -5.304779    2.574427
+                           |
+ culturalservicesandvenues |
+                        2  |    4.43213   2.009618     2.21   0.027     .4918768    8.372383
+                        3  |   4.825679   1.998399     2.41   0.016     .9074227    8.743936
+                           |
+                   schools |
+                        2  |   4.454353   2.282723     1.95   0.051    -.0213783    8.930084
+                        3  |   4.141615   2.311967     1.79   0.073    -.3914537    8.674684
+                        4  |   1.919322   2.082205     0.92   0.357    -2.163253    6.001898
+                           |
+             2.intertravel |   .2132074   .7744193     0.28   0.783    -1.305195     1.73161
+             2.intratravel |  -1.317543   .5599398    -2.35   0.019    -2.415416   -.2196703
+                           |
+      diningandrestaurants |
+                        2  |  -3.621958    .939462    -3.86   0.000    -5.463959   -1.779957
+                        3  |  -4.485175   .9791126    -4.58   0.000    -6.404919   -2.565431
+                           |
+                  province |
+         British Columbia  |   .3914813   .8072616     0.48   0.628    -1.191315    1.974277
+                 Manitoba  |  -.2509579   1.043672    -0.24   0.810    -2.297284    1.795369
+            New Brunswick  |  -4.343133   .9703092    -4.48   0.000    -6.245616    -2.44065
+Newfoundland and Labrador  |  -1.603001   .9359212    -1.71   0.087     -3.43806    .2320581
+    Northwest Territories  |  -5.794675   1.367443    -4.24   0.000    -8.475817   -3.113533
+              Nova Scotia  |  -3.891527   1.180502    -3.30   0.001    -6.206136   -1.576919
+                  Ontario  |  -3.866265   .7002121    -5.52   0.000    -5.239169    -2.49336
+     Prince Edward Island  |  -.5315997   .9923196    -0.54   0.592    -2.477239    1.414039
+                   Quebec  |  -7.541196   .8170259    -9.23   0.000    -9.143137   -5.939255
+             Saskatchewan  |   3.416888   1.115997     3.06   0.002     1.228754    5.605022
+          Yukon Territory  |   4.690625   1.754174     2.67   0.008      1.25122     8.13003
+                           |
+                     _cons |   -9.18059   2.818559    -3.26   0.001    -14.70693   -3.654247
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       356           0         356     |
+-----------------------------------------------------+
+
+. 
+. reghdfe residential_percent_change_from_ i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      3,502
+Absorbing 1 HDFE group                            F(  22,   3124) =     274.92
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9276
+                                                  Adj R-squared   =     0.9189
+                                                  Within R-sq.    =     0.6594
+                                                  Root MSE        =     1.9591
+
+--------------------------------------------------------------------------------------------
+residential_percent_chan~_ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -1.449353   .3306499    -4.38   0.000    -2.097666   -.8010401
+                        3  |   .1184413   .3782874     0.31   0.754    -.6232757    .8601584
+                           |
+      nonessentialservices |
+                        2  |  -.3690447   .5160848    -0.72   0.475    -1.380944    .6428549
+                        3  |   .5914774   .5149499     1.15   0.251    -.4181971    1.601152
+                           |
+ culturalservicesandvenues |
+                        2  |   .0857699   .6577821     0.13   0.896    -1.203959    1.375499
+                        3  |   .3266543   .6626809     0.49   0.622    -.9726797    1.625988
+                           |
+                   schools |
+                        2  |  -1.663932   .5957457    -2.79   0.005    -2.832024    -.495839
+                        3  |  -1.379493   .6016762    -2.29   0.022    -2.559214   -.1997726
+                        4  |  -.6972449   .5544489    -1.26   0.209    -1.784366    .3898761
+                           |
+             2.intertravel |  -.6606835   .1884635    -3.51   0.000    -1.030208   -.2911585
+             2.intratravel |   .1748565   .1386672     1.26   0.207    -.0970316    .4467445
+                           |
+      diningandrestaurants |
+                        2  |    1.41463   .2269898     6.23   0.000     .9695659    1.859694
+                        3  |   1.884002   .2346722     8.03   0.000     1.423875    2.344129
+                           |
+                  province |
+         British Columbia  |   .2894301   .1932873     1.50   0.134    -.0895527     .668413
+                 Manitoba  |  -.5551288   .2528505    -2.20   0.028    -1.050899    -.059359
+            New Brunswick  |  -2.351254   .2323801   -10.12   0.000    -2.806887   -1.895621
+Newfoundland and Labrador  |  -4.643662   .2227447   -20.85   0.000    -5.080403   -4.206921
+              Nova Scotia  |  -1.065327   .2824774    -3.77   0.000    -1.619187   -.5114673
+                  Ontario  |   1.601615   .1650819     9.70   0.000     1.277935    1.925295
+     Prince Edward Island  |  -3.540792   .2407319   -14.71   0.000    -4.012801   -3.068783
+                   Quebec  |   1.117516   .1963413     5.69   0.000     .7325447    1.502487
+             Saskatchewan  |  -2.246171   .2725801    -8.24   0.000    -2.780625   -1.711717
+                           |
+                     _cons |   11.80776   .9540416    12.38   0.000     9.937149    13.67837
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       356           0         356     |
+-----------------------------------------------------+
+
+. 
+. reghdfe parks_percent_change_from_baseli i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      2,989
+Absorbing 1 HDFE group                            F(  22,   2611) =      33.70
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8017
+                                                  Adj R-squared   =     0.7730
+                                                  Within R-sq.    =     0.2212
+                                                  Root MSE        =    38.5087
+
+--------------------------------------------------------------------------------------------
+parks_percent_change_fro~i |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |   22.21094   6.697457     3.32   0.001     9.078073     35.3438
+                        3  |    11.2408   7.673708     1.46   0.143    -3.806371    26.28796
+                           |
+      nonessentialservices |
+                        2  |  -.7998222   10.31928    -0.08   0.938    -21.03462    19.43498
+                        3  |   3.396944    10.2979     0.33   0.742    -16.79592    23.58981
+                           |
+ culturalservicesandvenues |
+                        2  |   5.218286   13.47361     0.39   0.699    -21.20175    31.63832
+                        3  |   14.34265   13.59653     1.05   0.292    -12.31842    41.00372
+                           |
+                   schools |
+                        2  |  -3.119199    13.5341    -0.23   0.818    -29.65785    23.41946
+                        3  |   3.041287   13.65079     0.22   0.824    -23.72618    29.80876
+                        4  |   9.607224   12.85594     0.75   0.455    -15.60164    34.81609
+                           |
+             2.intertravel |   4.030086    3.79152     1.06   0.288    -3.404602    11.46477
+             2.intratravel |   8.451913   2.848136     2.97   0.003     2.867081    14.03675
+                           |
+      diningandrestaurants |
+                        2  |  -20.43997   4.715141    -4.33   0.000    -29.68576   -11.19418
+                        3  |  -27.24237     4.8687    -5.60   0.000    -36.78928   -17.69547
+                           |
+                  province |
+         British Columbia  |   21.40818   3.861095     5.54   0.000     13.83707     28.9793
+                 Manitoba  |   4.721038   5.127669     0.92   0.357    -5.333669    14.77574
+            New Brunswick  |   40.10942   4.697974     8.54   0.000     30.89729    49.32155
+Newfoundland and Labrador  |   35.24255   4.473429     7.88   0.000     26.47073    44.01438
+              Nova Scotia  |   52.37497   5.637415     9.29   0.000     41.32072    63.42923
+                  Ontario  |   12.12602    3.27477     3.70   0.000     5.704611    18.54742
+     Prince Edward Island  |  -12.49617   17.05684    -0.73   0.464    -45.94247    20.95014
+                   Quebec  |   20.46258   3.943239     5.19   0.000     12.73039    28.19477
+             Saskatchewan  |   37.83656   5.511574     6.86   0.000     27.02907    48.64406
+                           |
+                     _cons |   15.43471   20.74927     0.74   0.457    -25.25197    56.12139
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       356           0         356     |
+-----------------------------------------------------+
+
+. 
+. // Reopening Regressions Overall
+. 
+. reghdfe driving i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        406
+Absorbing 1 HDFE group                            F(  27,    344) =      35.24
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8998
+                                                  Adj R-squared   =     0.8821
+                                                  Within R-sq.    =     0.7345
+                                                  Root MSE        =    16.4676
+
+--------------------------------------------------------------------------------------------
+                   driving |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                    stores |
+                        2  |  -12.36906   7.662676    -1.61   0.107    -27.44065     2.70254
+                        3  |  -9.100136   10.24974    -0.89   0.375    -29.26019    11.05992
+                        4  |   -2.82193   10.50443    -0.27   0.788    -23.48292    17.83906
+                           |
+                 schooling |
+                        2  |   21.55761   7.414229     2.91   0.004     6.974681    36.14054
+                        3  |   36.12694   5.547985     6.51   0.000      25.2147    47.03918
+                        4  |   33.63121   7.774773     4.33   0.000     18.33913    48.92329
+                        5  |    16.1988   9.907171     1.64   0.103    -3.287458    35.68505
+                           |
+                 3.borders |     4.1676   5.810497     0.72   0.474    -7.260974    15.59617
+                           |
+                  eateries |
+                        3  |  -2.929581   5.740211    -0.51   0.610    -14.21991    8.360748
+                        4  |  -17.26505   5.911674    -2.92   0.004    -28.89263    -5.63747
+                           |
+                  cultural |
+                        2  |  -1.689059   7.240081    -0.23   0.816    -15.92946    12.55134
+                        3  |  -6.462922   8.099475    -0.80   0.425    -22.39365    9.467806
+                        4  |   5.824745   8.845114     0.66   0.511    -11.57257    23.22206
+                           |
+                gatherings |
+                        2  |  -2.697431    6.75741    -0.40   0.690    -15.98847    10.59361
+                        3  |  -9.107916   7.606919    -1.20   0.232    -24.06984    5.854012
+                        4  |  -4.221557   8.858015    -0.48   0.634    -21.64425    13.20113
+                           |
+                  province |
+         British Columbia  |  -13.50967   6.741897    -2.00   0.046     -26.7702   -.2491447
+                 Manitoba  |  -10.50537   5.016291    -2.09   0.037    -20.37183   -.6389026
+            New Brunswick  |   8.866676   5.326224     1.66   0.097    -1.609389    19.34274
+Newfoundland and Labrador  |   11.23148   5.929789     1.89   0.059    -.4317228    22.89469
+    Northwest Territories  |  -60.25071   7.731043    -7.79   0.000    -75.45678   -45.04465
+              Nova Scotia  |  -2.689884   5.648074    -0.48   0.634    -13.79899    8.419222
+                  Ontario  |  -33.40987   7.030152    -4.75   0.000    -47.23737   -19.58238
+     Prince Edward Island  |   33.43926   5.992209     5.58   0.000     21.65328    45.22524
+                   Quebec  |  -28.82107   5.776946    -4.99   0.000    -40.18365   -17.45849
+             Saskatchewan  |  -1.054388    5.87893    -0.18   0.858    -12.61756    10.50879
+          Yukon Territory  |   27.28641    7.99368     3.41   0.001     11.56376    43.00905
+                           |
+                     _cons |    119.703   10.96977    10.91   0.000     98.12673    141.2793
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        35           0          35     |
+-----------------------------------------------------+
+
+. 
+. reghdfe walking i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        307
+Absorbing 1 HDFE group                            F(  24,    248) =      57.67
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9180
+                                                  Adj R-squared   =     0.8988
+                                                  Within R-sq.    =     0.8480
+                                                  Root MSE        =    13.9938
+
+--------------------------------------------------------------------------------------------
+                   walking |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                    stores |
+                        2  |  -12.38074   7.014513    -1.77   0.079    -26.19635    1.434875
+                        3  |  -13.84085   9.960298    -1.39   0.166    -33.45841    5.776709
+                        4  |  -11.43418    10.1202    -1.13   0.260    -31.36667    8.498308
+                           |
+                 schooling |
+                        2  |    39.0991   18.41574     2.12   0.035     2.827904    75.37031
+                        3  |   50.86555   18.05589     2.82   0.005     15.30311    86.42799
+                        4  |   55.75627   18.22058     3.06   0.002     19.86946    91.64308
+                        5  |   61.15985   19.28716     3.17   0.002     23.17234    99.14736
+                           |
+                 3.borders |   10.35505   5.136434     2.02   0.045     .2384496    20.47164
+                           |
+                  eateries |
+                        3  |  -8.209681   5.287311    -1.55   0.122    -18.62344    2.204077
+                        4  |  -5.209906   5.481964    -0.95   0.343    -16.00705    5.587238
+                           |
+                  cultural |
+                        2  |    2.00161   6.673756     0.30   0.764    -11.14286    15.14608
+                        3  |   9.693777   8.121476     1.19   0.234    -6.302084    25.68964
+                        4  |   6.472955   8.685023     0.75   0.457    -10.63286    23.57877
+                           |
+                gatherings |
+                        2  |  -3.057705   6.034646    -0.51   0.613     -14.9434    8.827988
+                        3  |   -8.17233   6.898266    -1.18   0.237    -21.75899    5.414326
+                        4  |  -15.68575   8.125316    -1.93   0.055    -31.68918    .3176706
+                           |
+                  province |
+         British Columbia  |  -38.02206   5.896951    -6.45   0.000    -49.63655   -26.40757
+                 Manitoba  |  -30.60977   4.410922    -6.94   0.000    -39.29742   -21.92213
+            New Brunswick  |    22.8743   4.709069     4.86   0.000     13.59943    32.14917
+Newfoundland and Labrador  |   8.924545   5.343623     1.67   0.096    -1.600124    19.44921
+              Nova Scotia  |  -8.400315   5.180911    -1.62   0.106    -18.60451     1.80388
+                  Ontario  |  -64.04943   6.431445    -9.96   0.000    -76.71665   -51.38221
+                   Quebec  |  -55.87048   5.350209   -10.44   0.000    -66.40813   -45.33284
+             Saskatchewan  |   3.542145   5.274995     0.67   0.503    -6.847357    13.93165
+                           |
+                     _cons |   122.5296   18.67825     6.56   0.000     85.74134    159.3178
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        35           0          35     |
+-----------------------------------------------------+
+
+. 
+. reghdfe transit i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        239
+Absorbing 1 HDFE group                            F(  21,    183) =      29.61
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8873
+                                                  Adj R-squared   =     0.8535
+                                                  Within R-sq.    =     0.7726
+                                                  Root MSE        =     4.7535
+
+-----------------------------------------------------------------------------------
+          transit |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+           stores |
+               2  |    2.20992   2.515206     0.88   0.381    -2.752612    7.172453
+               3  |   6.338002    3.50404     1.81   0.072     -.575511    13.25152
+               4  |   10.19863   3.642927     2.80   0.006     3.011093    17.38617
+                  |
+        schooling |
+               3  |  -3.138855    1.77072    -1.77   0.078    -6.632506    .3547959
+               4  |  -1.180673    1.80599    -0.65   0.514    -4.743913    2.382567
+               5  |  -1.241604   2.691925    -0.46   0.645    -6.552803    4.069596
+                  |
+        3.borders |   -.750238   2.460749    -0.30   0.761    -5.605325    4.104849
+                  |
+         eateries |
+               3  |  -1.023265   1.938989    -0.53   0.598    -4.848914    2.802384
+               4  |   4.392856    2.10464     2.09   0.038     .2403761    8.545336
+                  |
+         cultural |
+               2  |  -1.770731   2.309912    -0.77   0.444    -6.328214    2.786753
+               3  |   .0508218    2.83223     0.02   0.986    -5.537202    5.638846
+               4  |   .4111883   3.137641     0.13   0.896    -5.779415    6.601792
+                  |
+       gatherings |
+               2  |  -3.254621   2.185413    -1.49   0.138    -7.566468    1.057226
+               3  |  -4.172604   2.586381    -1.61   0.108    -9.275565     .930357
+               4  |  -6.300085   3.063735    -2.06   0.041    -12.34487   -.2552986
+                  |
+         province |
+British Columbia  |  -15.58484   2.199155    -7.09   0.000     -19.9238   -11.24588
+        Manitoba  |   2.863609   1.593939     1.80   0.074    -.2812515     6.00847
+     Nova Scotia  |    2.39163   2.008787     1.19   0.235    -1.571731    6.354991
+         Ontario  |  -15.60221   2.549833    -6.12   0.000    -20.63307   -10.57136
+          Quebec  |  -7.592634   2.052111    -3.70   0.000    -11.64147   -3.543794
+    Saskatchewan  |  -8.913306    1.96745    -4.53   0.000    -12.79511   -5.031502
+                  |
+            _cons |   55.23474   4.442694    12.43   0.000     46.46925    64.00022
+-----------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        35           0          35     |
+-----------------------------------------------------+
+
+. 
+. reghdfe workplaces_percent_change_from_b i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        427
+Absorbing 1 HDFE group                            F(  28,    364) =      32.37
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8283
+                                                  Adj R-squared   =     0.7991
+                                                  Within R-sq.    =     0.7134
+                                                  Root MSE        =     6.4828
+
+--------------------------------------------------------------------------------------------
+workplaces_percent_chang~b |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                    stores |
+                        2  |   4.011731   2.879201     1.39   0.164    -1.650224    9.673686
+                        3  |   5.968051   3.939779     1.51   0.131    -1.779534    13.71564
+                        4  |   7.367404   3.983849     1.85   0.065    -.4668456    15.20165
+                           |
+                 schooling |
+                        2  |   10.82088   2.886858     3.75   0.000     5.143863    16.49789
+                        3  |   9.764126   2.287886     4.27   0.000     5.264991    14.26326
+                        4  |   11.02302    3.03368     3.63   0.000     5.057279    16.98876
+                        5  |   10.19103   3.971545     2.57   0.011     2.380975    18.00108
+                           |
+                 3.borders |    4.12044   2.265669     1.82   0.070    -.3350053    8.575884
+                           |
+                  eateries |
+                        3  |  -1.510615   2.252785    -0.67   0.503    -5.940723    2.919493
+                        4  |   .6183875   2.293891     0.27   0.788    -3.892555     5.12933
+                           |
+                  cultural |
+                        2  |   .0247599   2.842315     0.01   0.993    -5.564659    5.614179
+                        3  |   1.757259   3.168641     0.55   0.580    -4.473881    7.988399
+                        4  |   .4856527   3.454906     0.14   0.888     -6.30843    7.279735
+                           |
+                gatherings |
+                        2  |  -.4620352   2.653865    -0.17   0.862    -5.680868    4.756798
+                        3  |   .1307413   2.979114     0.04   0.965    -5.727694    5.989177
+                        4  |   1.144956   3.469978     0.33   0.742    -5.678765    7.968677
+                           |
+                  province |
+         British Columbia  |  -.0140945   2.594401    -0.01   0.996     -5.11599    5.087801
+                 Manitoba  |   4.720225   1.965325     2.40   0.017     .8554088    8.585041
+            New Brunswick  |   3.702554   2.084907     1.78   0.077    -.3974211    7.802529
+Newfoundland and Labrador  |   16.33141   2.296868     7.11   0.000     11.81461    20.84821
+    Northwest Territories  |   24.47818   3.020045     8.11   0.000     18.53925    30.41711
+              Nova Scotia  |  -.6073848   2.209232    -0.27   0.784    -4.951845    3.737076
+                  Nunavut  |   25.47647   2.127175    11.98   0.000     21.29337    29.65956
+                  Ontario  |  -5.272975   2.649408    -1.99   0.047    -10.48304   -.0629069
+     Prince Edward Island  |   10.32517   2.305684     4.48   0.000     5.791034     14.8593
+                   Quebec  |  -2.392905   2.250993    -1.06   0.288    -6.819489    2.033679
+             Saskatchewan  |   8.850956   2.286848     3.87   0.000     4.353863    13.34805
+          Yukon Territory  |   22.43851   3.162328     7.10   0.000     16.21979    28.65724
+                           |
+                     _cons |  -54.72852   4.016413   -13.63   0.000    -62.62681   -46.83024
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        35           0          35     |
+-----------------------------------------------------+
+
+. 
+. reghdfe retail_and_recreation_percent_ch i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        393
+Absorbing 1 HDFE group                            F(  27,    331) =      37.46
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8693
+                                                  Adj R-squared   =     0.8452
+                                                  Within R-sq.    =     0.7534
+                                                  Root MSE        =     6.4274
+
+--------------------------------------------------------------------------------------------
+retail_and_recreation_pe~h |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                    stores |
+                        2  |  -1.031391   3.005761    -0.34   0.732    -6.944195    4.881412
+                        3  |   7.560508   4.020994     1.88   0.061    -.3494168    15.47043
+                        4  |   8.832128   4.123366     2.14   0.033     .7208198    16.94344
+                           |
+                 schooling |
+                        2  |   7.106131   3.157702     2.25   0.025     .8944368    13.31783
+                        3  |   10.16556   2.468721     4.12   0.000     5.309196    15.02192
+                        4  |   10.82731   3.328581     3.25   0.001     4.279465    17.37515
+                        5  |   6.059411   4.090996     1.48   0.140    -1.988219    14.10704
+                           |
+                 3.borders |   5.050458   2.271346     2.22   0.027     .5823635    9.518552
+                           |
+                  eateries |
+                        3  |   2.392785   2.242007     1.07   0.287    -2.017594    6.803164
+                        4  |    4.44326   2.318034     1.92   0.056    -.1166759    9.003195
+                           |
+                  cultural |
+                        2  |  -5.714402   2.833741    -2.02   0.045    -11.28881   -.1399888
+                        3  |  -3.885775   3.163365    -1.23   0.220    -10.10861    2.337059
+                        4  |  -1.836065   3.466361    -0.53   0.597     -8.65494     4.98281
+                           |
+                gatherings |
+                        2  |  -1.644073   2.645181    -0.62   0.535     -6.84756    3.559413
+                        3  |  -3.338347   2.984764    -1.12   0.264    -9.209845    2.533152
+                        4  |  -3.771473   3.479163    -1.08   0.279    -10.61553    3.072586
+                           |
+                  province |
+         British Columbia  |  -5.751955   2.641105    -2.18   0.030    -10.94742   -.5564871
+                 Manitoba  |  -1.544927   1.966677    -0.79   0.433    -5.413688    2.323835
+            New Brunswick  |   2.633582   2.082807     1.26   0.207    -1.463627    6.730791
+Newfoundland and Labrador  |   16.12336   2.321942     6.94   0.000     11.55574    20.69098
+    Northwest Territories  |  -9.550403    3.05024    -3.13   0.002     -15.5507   -3.550103
+              Nova Scotia  |  -1.894291   2.213777    -0.86   0.393    -6.249139    2.460556
+                  Ontario  |  -11.09857   2.764572    -4.01   0.000    -16.53692   -5.660224
+     Prince Edward Island  |   11.91196   2.369746     5.03   0.000     7.250298    16.57362
+                   Quebec  |  -5.692018   2.267301    -2.51   0.013    -10.15215   -1.231882
+             Saskatchewan  |   .5334948   2.304746     0.23   0.817    -4.000301    5.067291
+          Yukon Territory  |  -1.913004   3.158099    -0.61   0.545     -8.12548    4.299471
+                           |
+                     _cons |  -31.64188   4.384896    -7.22   0.000    -40.26766    -23.0161
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        35           0          35     |
+-----------------------------------------------------+
+
+. 
+. reghdfe residential_percent_change_from_ i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        340
+Absorbing 1 HDFE group                            F(  25,    280) =      35.77
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8839
+                                                  Adj R-squared   =     0.8595
+                                                  Within R-sq.    =     0.7616
+                                                  Root MSE        =     1.9038
+
+--------------------------------------------------------------------------------------------
+residential_percent_chan~_ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                    stores |
+                        2  |    .072511   .9399098     0.08   0.939    -1.777676    1.922698
+                        3  |   -1.21654   1.308653    -0.93   0.353    -3.792588    1.359508
+                        4  |  -1.896708   1.338263    -1.42   0.158    -4.531043    .7376271
+                           |
+                 schooling |
+                        2  |   4.582691   2.471824     1.85   0.065    -.2830266    9.448408
+                        3  |   4.504613   2.432902     1.85   0.065    -.2844873    9.293713
+                        4  |   3.363616   2.454346     1.37   0.172    -1.467697    8.194929
+                        5  |   3.478474   2.593578     1.34   0.181    -1.626913    8.583862
+                           |
+                 3.borders |   -1.19358   .6836518    -1.75   0.082     -2.53933    .1521699
+                           |
+                  eateries |
+                        3  |  -.3313841    .684689    -0.48   0.629    -1.679176    1.016407
+                        4  |  -.8734039   .7025934    -1.24   0.215     -2.25644    .5096318
+                           |
+                  cultural |
+                        2  |   1.603407   .8928176     1.80   0.074    -.1540795    3.360894
+                        3  |    .518674   1.076596     0.48   0.630    -1.600576    2.637924
+                        4  |   .7150041   1.137227     0.63   0.530    -1.523596    2.953605
+                           |
+                gatherings |
+                        2  |   .1456782   .8077076     0.18   0.857    -1.444272    1.735628
+                        3  |   .7527751   .9177835     0.82   0.413    -1.053857    2.559407
+                        4  |   1.460476   1.079812     1.35   0.177    -.6651033    3.586055
+                           |
+                  province |
+         British Columbia  |   1.657872   .7870241     2.11   0.036     .1086364    3.207107
+                 Manitoba  |   .6161699   .5819364     1.06   0.291    -.5293559    1.761696
+            New Brunswick  |  -1.490721    .618816    -2.41   0.017    -2.708843   -.2725983
+Newfoundland and Labrador  |  -6.144435   .6972764    -8.81   0.000    -7.517005   -4.771866
+              Nova Scotia  |  -.7270635   .6657854    -1.09   0.276    -2.037644    .5835168
+                  Ontario  |   4.482952   .8220873     5.45   0.000     2.864696    6.101209
+     Prince Edward Island  |  -3.042279   .7002699    -4.34   0.000    -4.420741   -1.663817
+                   Quebec  |   1.755971    .684187     2.57   0.011     .4091677    3.102774
+             Saskatchewan  |  -1.544531   .6841357    -2.26   0.025    -2.891234   -.1978291
+                           |
+                     _cons |   7.351914   2.515453     2.92   0.004     2.400314    12.30351
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        35           0          35     |
+-----------------------------------------------------+
+
+. 
+. reghdfe parks_percent_change_from_baseli i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        274
+Absorbing 1 HDFE group                            F(  24,    215) =       7.38
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8861
+                                                  Adj R-squared   =     0.8553
+                                                  Within R-sq.    =     0.4518
+                                                  Root MSE        =    29.3434
+
+--------------------------------------------------------------------------------------------
+parks_percent_change_fro~i |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                    stores |
+                        2  |  -20.36069   15.00969    -1.36   0.176    -49.94568    9.224292
+                        3  |   -33.9819   21.11532    -1.61   0.109    -75.60146    7.637651
+                        4  |  -16.06171   21.55266    -0.75   0.457    -58.54328    26.41986
+                           |
+                 schooling |
+                        2  |   36.28344     39.411     0.92   0.358    -41.39797    113.9649
+                        3  |   53.26726   39.00356     1.37   0.173    -23.61106    130.1456
+                        4  |   65.92181   39.22411     1.68   0.094    -11.39123    143.2348
+                        5  |   47.03389    41.1128     1.14   0.254    -34.00187    128.0697
+                           |
+                 3.borders |  -7.673119    11.2238    -0.68   0.495    -29.79588    14.44965
+                           |
+                  eateries |
+                        3  |  -11.56983   11.24369    -1.03   0.305    -33.73181    10.59215
+                        4  |  -18.19475   11.80843    -1.54   0.125    -41.46986    5.080366
+                           |
+                  cultural |
+                        2  |    3.84974   14.23315     0.27   0.787    -24.20464    31.90412
+                        3  |   8.479802   17.13016     0.50   0.621    -25.28476    42.24437
+                        4  |   16.60841   18.51033     0.90   0.371    -19.87654    53.09336
+                           |
+                gatherings |
+                        2  |   10.77402   12.85265     0.84   0.403    -14.55931    36.10735
+                        3  |  -6.439703   15.23806    -0.42   0.673    -36.47481    23.59541
+                        4  |  -15.60138   17.68707    -0.88   0.379    -50.46364    19.26089
+                           |
+                  province |
+         British Columbia  |   7.127115   12.86687     0.55   0.580    -18.23425    32.48848
+                 Manitoba  |  -8.006446   9.565077    -0.84   0.403    -26.85978    10.84689
+            New Brunswick  |   18.32209   10.33843     1.77   0.078    -2.055566    38.69975
+Newfoundland and Labrador  |   50.56478   12.98311     3.89   0.000      24.9743    76.15526
+              Nova Scotia  |   49.07406   11.51089     4.26   0.000     26.38541     71.7627
+                  Ontario  |  -20.05935   13.96989    -1.44   0.152    -47.59483    7.476129
+                   Quebec  |   -.795217   11.53157    -0.07   0.945    -23.52462    21.93419
+             Saskatchewan  |   18.31938   11.65856     1.57   0.118    -4.660328    41.29909
+                           |
+                     _cons |   8.421218   39.77097     0.21   0.833    -69.96972    86.81215
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        35           0          35     |
+-----------------------------------------------------+
+
+. 
+. reghdfe grocery_and_pharmacy_percent_cha i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        334
+Absorbing 1 HDFE group                            F(  25,    274) =       7.72
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.7956
+                                                  Adj R-squared   =     0.7516
+                                                  Within R-sq.    =     0.4133
+                                                  Root MSE        =     6.1684
+
+--------------------------------------------------------------------------------------------
+grocery_and_pharmacy_per~a |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                    stores |
+                        2  |  -2.797323   3.049869    -0.92   0.360    -8.801476    3.206831
+                        3  |   3.033532   4.243596     0.71   0.475    -5.320663    11.38773
+                        4  |   3.363273   4.339642     0.78   0.439    -5.180005    11.90655
+                           |
+                 schooling |
+                        2  |  -12.21313    8.02149    -1.52   0.129    -28.00472    3.578449
+                        3  |  -10.22027   7.907223    -1.29   0.197     -25.7869     5.34636
+                        4  |  -7.455796   7.963721    -0.94   0.350    -23.13365    8.222059
+                        5  |  -11.14276   8.410941    -1.32   0.186    -27.70104    5.415516
+                           |
+                 3.borders |   2.624349   2.217415     1.18   0.238    -1.740986    6.989684
+                           |
+                  eateries |
+                        3  |   2.981021   2.220251     1.34   0.180    -1.389898     7.35194
+                        4  |   3.957544   2.291288     1.73   0.085    -.5532227    8.468311
+                           |
+                  cultural |
+                        2  |  -3.665377   2.894109    -1.27   0.206    -9.362893    2.032139
+                        3  |  -2.916188   3.488707    -0.84   0.404    -9.784265    3.951889
+                        4  |  -3.210048    3.69164    -0.87   0.385    -10.47763    4.057534
+                           |
+                gatherings |
+                        2  |  -1.353745   2.618924    -0.52   0.606    -6.509516    3.802026
+                        3  |  -3.578021    2.98542    -1.20   0.232    -9.455297    2.299256
+                        4  |  -7.461594   3.504443    -2.13   0.034    -14.36065   -.5625387
+                           |
+                  province |
+         British Columbia  |  -2.706078   2.557714    -1.06   0.291    -7.741346    2.329191
+                 Manitoba  |  -5.608677   1.899415    -2.95   0.003    -9.347979   -1.869374
+            New Brunswick  |  -9.011028   2.008086    -4.49   0.000    -12.96427    -5.05779
+Newfoundland and Labrador  |   1.859026   2.279873     0.82   0.416    -2.629268    6.347321
+              Nova Scotia  |  -4.492248   2.161961    -2.08   0.039    -8.748413   -.2360836
+                  Ontario  |  -8.655743   2.678195    -3.23   0.001     -13.9282   -3.383289
+     Prince Edward Island  |  -3.444264   2.296778    -1.50   0.135    -7.965839    1.077311
+                   Quebec  |  -8.534169   2.221149    -3.84   0.000    -12.90686   -4.161483
+             Saskatchewan  |  -2.415059   2.234818    -1.08   0.281    -6.814656    1.984538
+                           |
+                     _cons |   10.47626   8.153447     1.28   0.200    -5.575099    26.52762
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        35           0          35     |
+-----------------------------------------------------+
+
+. 
+. // Breton Main Regressions First Wave
+. reghdfe driving i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 1, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      1,092
+Absorbing 1 HDFE group                            F(  23,    978) =     101.63
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9117
+                                                  Adj R-squared   =     0.9015
+                                                  Within R-sq.    =     0.7050
+                                                  Root MSE        =     9.0135
+
+--------------------------------------------------------------------------------------------
+                   driving |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -6.804845   2.862231    -2.38   0.018    -12.42167   -1.188024
+                        3  |  -10.67527   3.156799    -3.38   0.001    -16.87015   -4.480395
+                           |
+      nonessentialservices |
+                        2  |    7.55532   2.923377     2.58   0.010     1.818506    13.29213
+                        3  |   5.994225   2.894721     2.07   0.039     .3136459     11.6748
+                           |
+ culturalservicesandvenues |
+                        2  |  -6.308915   2.548426    -2.48   0.013    -11.30993   -1.307904
+                        3  |   2.978811   2.768263     1.08   0.282    -2.453608     8.41123
+                           |
+                   schools |
+                        2  |  -2.305225   9.769136    -0.24   0.814    -21.47611    16.86566
+                        4  |   2.354691   2.311774     1.02   0.309    -2.181916    6.891299
+                           |
+             2.intertravel |   5.342331   1.065218     5.02   0.000     3.251955    7.432706
+             2.intratravel |  -2.555799   1.113239    -2.30   0.022    -4.740412   -.3711864
+                           |
+      diningandrestaurants |
+                        2  |  -8.069921   3.010891    -2.68   0.007    -13.97847   -2.161371
+                        3  |  -12.33789   3.255109    -3.79   0.000     -18.7257   -5.950093
+                           |
+                  province |
+         British Columbia  |  -7.130521   1.740389    -4.10   0.000    -10.54585   -3.715195
+                 Manitoba  |   3.537343   1.713328     2.06   0.039     .1751203    6.899565
+            New Brunswick  |   7.495033   1.610236     4.65   0.000     4.335118    10.65495
+Newfoundland and Labrador  |  -.0623915   1.469734    -0.04   0.966    -2.946586    2.821803
+    Northwest Territories  |  -30.16478    1.75982   -17.14   0.000    -33.61824   -26.71132
+              Nova Scotia  |   -.943689   1.920844    -0.49   0.623     -4.71314    2.825762
+                  Ontario  |  -16.64602   1.412896   -11.78   0.000    -19.41867   -13.87336
+     Prince Edward Island  |   9.656394   1.654843     5.84   0.000     6.408942    12.90385
+                   Quebec  |  -21.27206   1.793062   -11.86   0.000    -24.79075   -17.75337
+             Saskatchewan  |   3.093747   1.927614     1.60   0.109    -.6889895    6.876483
+          Yukon Territory  |   7.720545   1.912009     4.04   0.000     3.968433    11.47266
+                           |
+                     _cons |   92.64718   2.876353    32.21   0.000     87.00264    98.29171
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        91           0          91     |
+-----------------------------------------------------+
+
+. 
+. reghdfe walking i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 1, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        837
+Absorbing 1 HDFE group                            F(  20,    724) =      56.19
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8602
+                                                  Adj R-squared   =     0.8386
+                                                  Within R-sq.    =     0.6082
+                                                  Root MSE        =    13.4388
+
+--------------------------------------------------------------------------------------------
+                   walking |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -6.643277   4.770139    -1.39   0.164    -16.00823     2.72168
+                        3  |  -3.902394   5.280678    -0.74   0.460    -14.26966    6.464876
+                           |
+      nonessentialservices |
+                        2  |   4.155172   4.728007     0.88   0.380    -5.127069    13.43741
+                        3  |   3.184811   4.664855     0.68   0.495    -5.973446    12.34307
+                           |
+ culturalservicesandvenues |
+                        2  |  -3.975219    5.05125    -0.79   0.432    -13.89207    5.941628
+                        3  |  -9.729333   5.693744    -1.71   0.088    -20.90755    1.448887
+                           |
+                   schools |
+                        2  |  -21.64927   15.10973    -1.43   0.152    -51.31339    8.014844
+                        4  |  -.6539822   4.749483    -0.14   0.891    -9.978386    8.670422
+                           |
+             2.intertravel |   8.341628   1.758483     4.74   0.000     4.889294    11.79396
+             2.intratravel |   -.881437   1.901254    -0.46   0.643    -4.614067    2.851193
+                           |
+      diningandrestaurants |
+                        2  |   15.24145   6.418046     2.37   0.018     2.641247    27.84165
+                        3  |   11.91794   6.948013     1.72   0.087    -1.722714     25.5586
+                           |
+                  province |
+         British Columbia  |   -25.3877    2.85428    -8.89   0.000    -30.99136   -19.78405
+                 Manitoba  |  -23.98149   2.671773    -8.98   0.000    -29.22684   -18.73614
+            New Brunswick  |  -7.848508   2.482524    -3.16   0.002    -12.72231   -2.974702
+Newfoundland and Labrador  |  -15.40143   2.202325    -6.99   0.000    -19.72514   -11.07773
+              Nova Scotia  |  -41.70579   3.169762   -13.16   0.000    -47.92881   -35.48277
+                  Ontario  |  -41.75033   2.125077   -19.65   0.000    -45.92238   -37.57828
+                   Quebec  |  -41.44252   2.977941   -13.92   0.000    -47.28895   -35.59609
+             Saskatchewan  |  -7.692268   3.238989    -2.37   0.018     -14.0512   -1.333336
+                           |
+                     _cons |     103.79   6.995206    14.84   0.000      90.0567    117.5233
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        93           0          93     |
+-----------------------------------------------------+
+
+. 
+. reghdfe transit i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 1, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        651
+Absorbing 1 HDFE group                            F(  18,    540) =      46.91
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9747
+                                                  Adj R-squared   =     0.9696
+                                                  Within R-sq.    =     0.6099
+                                                  Root MSE        =     4.2898
+
+--------------------------------------------------------------------------------------------
+                   transit |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -1.053008   2.104118    -0.50   0.617    -5.186267    3.080252
+                        3  |  -4.953826   2.323195    -2.13   0.033    -9.517433   -.3902197
+                           |
+      nonessentialservices |
+                        2  |   7.839259   1.900247     4.13   0.000     4.106477    11.57204
+                        3  |   3.790833   1.892922     2.00   0.046     .0724404    7.509226
+                           |
+ culturalservicesandvenues |
+                        2  |  -5.237409   1.915653    -2.73   0.006    -9.000455   -1.474364
+                        3  |  -2.151964   2.074221    -1.04   0.300    -6.226495    1.922567
+                           |
+                   schools |
+                        2  |   -6.62452   4.932564    -1.34   0.180    -16.31389    3.064846
+                        4  |  -6.988394   1.622562    -4.31   0.000     -10.1757   -3.801087
+                           |
+             2.intertravel |   1.810306   .7056149     2.57   0.011       .42422    3.196393
+             2.intratravel |   3.882621   .6677548     5.81   0.000     2.570906    5.194336
+                           |
+      diningandrestaurants |
+                        2  |  -2.091372    2.27112    -0.92   0.358    -6.552685    2.369942
+                        3  |  -.4692335   2.385152    -0.20   0.844    -5.154547     4.21608
+                           |
+                  province |
+         British Columbia  |   -12.9902   .9918532   -13.10   0.000    -14.93857   -11.04184
+                 Manitoba  |   .6457495   .9204557     0.70   0.483    -1.162363    2.453862
+              Nova Scotia  |  -5.661184   1.057827    -5.35   0.000    -7.739145   -3.583224
+                  Ontario  |  -9.893832   .6995658   -14.14   0.000    -11.26804   -8.519628
+                   Quebec  |  -5.363949   1.035259    -5.18   0.000    -7.397578    -3.33032
+             Saskatchewan  |  -3.308276   1.114685    -2.97   0.003    -5.497926   -1.118626
+                           |
+                     _cons |    49.2234   2.521164    19.52   0.000     44.27091    54.17589
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        93           0          93     |
+-----------------------------------------------------+
+
+. 
+. reghdfe workplaces_percent_change_from_b i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 1, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      1,177
+Absorbing 1 HDFE group                            F(  24,   1060) =      79.55
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9496
+                                                  Adj R-squared   =     0.9441
+                                                  Within R-sq.    =     0.6430
+                                                  Root MSE        =     4.9293
+
+--------------------------------------------------------------------------------------------
+workplaces_percent_chang~b |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -5.386052   1.565031    -3.44   0.001    -8.456962   -2.315142
+                        3  |  -6.743666   1.714928    -3.93   0.000    -10.10871   -3.378626
+                           |
+      nonessentialservices |
+                        2  |   6.196837   1.558506     3.98   0.000     3.138729    9.254946
+                        3  |   3.206265   1.576514     2.03   0.042     .1128224    6.299708
+                           |
+ culturalservicesandvenues |
+                        2  |   1.295438   1.352351     0.96   0.338    -1.358151    3.949027
+                        3  |     6.0329   1.413177     4.27   0.000     3.259958    8.805842
+                           |
+                   schools |
+                        2  |  -.3666467   5.320103    -0.07   0.945    -10.80578    10.07248
+                        4  |   .3679022   1.262259     0.29   0.771    -2.108909    2.844713
+                           |
+             2.intertravel |   1.181218   .5745615     2.06   0.040     .0538104    2.308625
+             2.intratravel |  -1.624309   .5546001    -2.93   0.003    -2.712548   -.5360699
+                           |
+      diningandrestaurants |
+                        2  |  -5.953656   1.585241    -3.76   0.000    -9.064222    -2.84309
+                        3  |  -11.32297   1.704832    -6.64   0.000     -14.6682   -7.977742
+                           |
+                  province |
+         British Columbia  |  -2.679064   .9406264    -2.85   0.004    -4.524765   -.8333622
+                 Manitoba  |   3.092571    .925348     3.34   0.001     1.276849    4.908293
+            New Brunswick  |  -1.884301   .8726687    -2.16   0.031    -3.596656   -.1719467
+Newfoundland and Labrador  |   .8779342   .7953393     1.10   0.270    -.6826842    2.438553
+    Northwest Territories  |   .9631347   .9620698     1.00   0.317    -.9246429    2.850912
+              Nova Scotia  |  -.4873849    1.02294    -0.48   0.634    -2.494603    1.519833
+                  Nunavut  |   10.49725   1.060315     9.90   0.000      8.41669     12.5778
+                  Ontario  |  -7.114715   .7660966    -9.29   0.000    -8.617954   -5.611477
+     Prince Edward Island  |   .4292097   .8968758     0.48   0.632    -1.330644    2.189063
+                   Quebec  |  -10.13431   .9776857   -10.37   0.000    -12.05273    -8.21589
+             Saskatchewan  |   2.006608   1.051547     1.91   0.057    -.0567423    4.069959
+          Yukon Territory  |   4.105506   1.088122     3.77   0.000     1.970389    6.240623
+                           |
+                     _cons |   -30.7519   1.574451   -19.53   0.000     -33.8413    -27.6625
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        93           0          93     |
+-----------------------------------------------------+
+
+. 
+. reghdfe retail_and_recreation_percent_ch i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 1, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      1,054
+Absorbing 1 HDFE group                            F(  24,    937) =      18.42
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8838
+                                                  Adj R-squared   =     0.8695
+                                                  Within R-sq.    =     0.3206
+                                                  Root MSE        =     7.8224
+
+--------------------------------------------------------------------------------------------
+retail_and_recreation_pe~h |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -5.074472   2.495937    -2.03   0.042    -9.972745   -.1761983
+                        3  |  -8.878909   2.742936    -3.24   0.001    -14.26192     -3.4959
+                           |
+      nonessentialservices |
+                        2  |   6.040933   2.545042     2.37   0.018     1.046291    11.03558
+                        3  |   1.907767   2.579765     0.74   0.460    -3.155019    6.970553
+                           |
+ culturalservicesandvenues |
+                        2  |   -.249359   2.260223    -0.11   0.912    -4.685044    4.186326
+                        3  |   6.102939   2.420473     2.52   0.012     1.352764    10.85312
+                           |
+                   schools |
+                        2  |   -3.72719   8.515912    -0.44   0.662    -20.43966    12.98528
+                        4  |  -1.064494    1.99482    -0.53   0.594    -4.979326    2.850337
+                           |
+             2.intertravel |   2.070162   .9469903     2.19   0.029     .2116947     3.92863
+             2.intratravel |  -1.854553   .9652618    -1.92   0.055    -3.748878    .0397726
+                           |
+      diningandrestaurants |
+                        2  |  -4.513905   2.650891    -1.70   0.089    -9.716277    .6884665
+                        3  |  -6.755635   2.851283    -2.37   0.018    -12.35127   -1.159995
+                           |
+                  province |
+         British Columbia  |  -3.134304   1.560651    -2.01   0.045    -6.197079   -.0715283
+                 Manitoba  |   4.023483   1.500804     2.68   0.007     1.078157    6.968809
+            New Brunswick  |   4.490629   1.403357     3.20   0.001     1.736542    7.244716
+Newfoundland and Labrador  |    1.94179   1.266617     1.53   0.126    -.5439442    4.427524
+    Northwest Territories  |   -.493159   1.852223    -0.27   0.790    -4.128145    3.141827
+              Nova Scotia  |   2.310874   1.716137     1.35   0.178    -1.057043    5.678791
+                  Nunavut  |   5.820258   2.158047     2.70   0.007     1.585093    10.05542
+                  Ontario  |  -8.427465   1.220855    -6.90   0.000    -10.82339   -6.031538
+     Prince Edward Island  |  -2.097881   1.442953    -1.45   0.146    -4.929674    .7339123
+                   Quebec  |  -10.52976   1.611941    -6.53   0.000     -13.6932   -7.366332
+             Saskatchewan  |  -.7416307   1.755961    -0.42   0.673    -4.187703    2.704442
+          Yukon Territory  |   .4817973   1.716815     0.28   0.779    -2.887451    3.851045
+                           |
+                     _cons |  -25.75879   2.593966    -9.93   0.000    -30.84944   -20.66813
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        93           0          93     |
+-----------------------------------------------------+
+
+. 
+. reghdfe residential_percent_change_from_ i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 1, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        902
+Absorbing 1 HDFE group                            F(  21,    788) =      43.72
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9477
+                                                  Adj R-squared   =     0.9402
+                                                  Within R-sq.    =     0.5381
+                                                  Root MSE        =     1.9436
+
+--------------------------------------------------------------------------------------------
+residential_percent_chan~_ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |   .9173434   .6810564     1.35   0.178    -.4195559    2.254243
+                        3  |    1.36732   .7462113     1.83   0.067     -.097477    2.832117
+                           |
+      nonessentialservices |
+                        2  |   -1.08314   .6667928    -1.62   0.105    -2.392041    .2257598
+                        3  |  -.4682322   .6693274    -0.70   0.484    -1.782108    .8456435
+                           |
+ culturalservicesandvenues |
+                        2  |  -.1412389   .7000879    -0.20   0.840    -1.515497    1.233019
+                        3  |  -.0706293   .7766887    -0.09   0.928    -1.595253    1.453994
+                           |
+                   schools |
+                        2  |   .7184783   2.145792     0.33   0.738    -3.493667    4.930624
+                        4  |  -.5075946   .5718298    -0.89   0.375    -1.630085    .6148954
+                           |
+             2.intertravel |  -.7440925   .2482539    -3.00   0.003     -1.23141   -.2567753
+             2.intratravel |   .2199864   .2678154     0.82   0.412    -.3057297    .7457025
+                           |
+      diningandrestaurants |
+                        2  |   .3604538   .8903456     0.40   0.686    -1.387276    2.108184
+                        3  |   .1399657   .9505334     0.15   0.883    -1.725911    2.005843
+                           |
+                  province |
+         British Columbia  |  -.1533061   .4050491    -0.38   0.705     -.948409    .6417967
+                 Manitoba  |   -1.06464   .3838723    -2.77   0.006    -1.818173   -.3111066
+            New Brunswick  |  -1.280112   .3572781    -3.58   0.000    -1.981441   -.5787823
+Newfoundland and Labrador  |  -2.624367   .3175388    -8.26   0.000    -3.247689   -2.001045
+              Nova Scotia  |  -.1664214   .4525212    -0.37   0.713    -1.054711    .7218681
+                  Ontario  |   2.728683   .3062937     8.91   0.000     2.127435    3.329931
+     Prince Edward Island  |  -1.387294   .3910807    -3.55   0.000    -2.154977   -.6196104
+                   Quebec  |   2.835901   .4267009     6.65   0.000     1.998296    3.673506
+             Saskatchewan  |  -1.912472   .4571006    -4.18   0.000    -2.809751   -1.015193
+                           |
+                     _cons |   14.32264   .9423262    15.20   0.000     12.47287     16.1724
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        93           0          93     |
+-----------------------------------------------------+
+
+. 
+. reghdfe grocery_and_pharmacy_percent_cha i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 1, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =      1,004
+Absorbing 1 HDFE group                            F(  23,    888) =      14.36
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.7956
+                                                  Adj R-squared   =     0.7691
+                                                  Within R-sq.    =     0.2711
+                                                  Root MSE        =     8.5003
+
+--------------------------------------------------------------------------------------------
+grocery_and_pharmacy_per~a |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -1.448337   2.737818    -0.53   0.597    -6.821685    3.925011
+                        3  |  -1.593318   3.035513    -0.52   0.600    -7.550935    4.364299
+                           |
+      nonessentialservices |
+                        2  |   5.823972   2.837155     2.05   0.040     .2556611    11.39228
+                        3  |   1.512685   2.843032     0.53   0.595    -4.067161    7.092531
+                           |
+ culturalservicesandvenues |
+                        2  |   4.008923   2.530968     1.58   0.114    -.9584544      8.9763
+                        3  |    5.09111   2.765484     1.84   0.066    -.3365367    10.51876
+                           |
+                   schools |
+                        2  |   .1317021   9.304868     0.01   0.989     -18.1304     18.3938
+                        4  |   1.426549   2.183744     0.65   0.514    -2.859353    5.712451
+                           |
+             2.intertravel |   .3086462   1.048539     0.29   0.769    -1.749258    2.366551
+             2.intratravel |   .0029563   1.103426     0.00   0.998     -2.16267    2.168583
+                           |
+      diningandrestaurants |
+                        2  |  -1.309848   2.918798    -0.45   0.654    -7.038394    4.418698
+                        3  |  -1.634444   3.169747    -0.52   0.606    -7.855513    4.586625
+                           |
+                  province |
+         British Columbia  |  -3.521919   1.719625    -2.05   0.041    -6.896923   -.1469156
+                 Manitoba  |   .5150453   1.643319     0.31   0.754    -2.710197    3.740287
+            New Brunswick  |  -8.042637   1.538614    -5.23   0.000    -11.06238   -5.022892
+Newfoundland and Labrador  |  -7.754383   1.380653    -5.62   0.000    -10.46411   -5.044659
+    Northwest Territories  |  -8.014851   2.257652    -3.55   0.000    -12.44581   -3.583894
+              Nova Scotia  |   -6.74327   1.910949    -3.53   0.000    -10.49377   -2.992767
+                  Ontario  |  -7.868445   1.331559    -5.91   0.000    -10.48181   -5.255074
+     Prince Edward Island  |  -5.501206   1.579914    -3.48   0.001    -8.602007   -2.400406
+                   Quebec  |  -13.88337   1.768401    -7.85   0.000     -17.3541   -10.41264
+             Saskatchewan  |      1.453   1.935197     0.75   0.453    -2.345094    5.251093
+          Yukon Territory  |   1.094922   2.125591     0.52   0.607    -3.076846    5.266691
+                           |
+                     _cons |  -8.479878   2.922715    -2.90   0.004    -14.21611   -2.743644
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        93           0          93     |
+-----------------------------------------------------+
+
+. 
+. reghdfe parks_percent_change_from_baseli i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 1, a(time)
+(MWFE estimator converged in 1 iterations)
+
+HDFE Linear regression                            Number of obs   =        831
+Absorbing 1 HDFE group                            F(  21,    717) =       7.10
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.6288
+                                                  Adj R-squared   =     0.5703
+                                                  Within R-sq.    =     0.1722
+                                                  Root MSE        =    37.4479
+
+--------------------------------------------------------------------------------------------
+parks_percent_change_fro~i |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |    4.44435   13.29676     0.33   0.738     -21.6609     30.5496
+                        3  |   3.339254   14.72517     0.23   0.821    -25.57035    32.24885
+                           |
+      nonessentialservices |
+                        2  |  -2.076266    13.1921    -0.16   0.875    -27.97602    23.82349
+                        3  |   7.566761   13.00898     0.58   0.561    -17.97348      33.107
+                           |
+ culturalservicesandvenues |
+                        2  |   .8719114   14.07845     0.06   0.951    -26.76799    28.51182
+                        3  |   5.181395   15.86859     0.33   0.744    -25.97305    36.33584
+                           |
+                   schools |
+                        2  |  -13.00116   42.38356    -0.31   0.759    -96.21187    70.20955
+                        4  |   3.186615   13.23525     0.24   0.810    -22.79787     29.1711
+                           |
+             2.intertravel |   7.711445   4.938523     1.56   0.119    -1.984249    17.40714
+             2.intratravel |    7.54669   5.312637     1.42   0.156    -2.883493    17.97687
+                           |
+      diningandrestaurants |
+                        2  |   16.75755   17.89151     0.94   0.349    -18.36846    51.88356
+                        3  |   15.61106   19.37135     0.81   0.421     -22.4203    53.64242
+                           |
+                  province |
+         British Columbia  |   39.05941   7.962929     4.91   0.000     23.42597    54.69286
+                 Manitoba  |   4.031548    7.44898     0.54   0.589    -10.59287    18.65597
+            New Brunswick  |   24.19973    6.95469     3.48   0.001     10.54574    37.85373
+Newfoundland and Labrador  |   18.80443   6.168485     3.05   0.002     6.693974    30.91488
+              Nova Scotia  |   28.38338    8.84664     3.21   0.001     11.01496    45.75179
+                  Ontario  |   1.731281   5.921892     0.29   0.770     -9.89504     13.3576
+     Prince Edward Island  |  -29.57836    28.3578    -1.04   0.297    -85.25261    26.09589
+                   Quebec  |  -3.151299   8.303716    -0.38   0.704     -19.4538     13.1512
+             Saskatchewan  |   24.13926   9.035092     2.67   0.008     6.400858    41.87765
+                           |
+                     _cons |  -24.50987     19.454    -1.26   0.208    -62.70349    13.68374
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        93           0          93     |
+-----------------------------------------------------+
+
+. 
+. // Reopenning Regressions Reopening Phase
+. 
+. reghdfe driving i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province if wave == 0, a(time)
+note: 2bn.borders is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+(MWFE estimator converged in 1 iterations)
+note: 2.borders omitted because of collinearity
+note: 13.province omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =        166
+Absorbing 1 HDFE group                            F(  22,    129) =      35.99
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8877
+                                                  Adj R-squared   =     0.8564
+                                                  Within R-sq.    =     0.8599
+                                                  Root MSE        =    17.3028
+
+--------------------------------------------------------------------------------------------
+                   driving |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                    stores |
+                        3  |  -15.45731   12.31983    -1.25   0.212    -39.83238    8.917769
+                        4  |  -29.48436   15.22879    -1.94   0.055     -59.6149     .646181
+                           |
+                 schooling |
+                        2  |   -20.8728   16.44352    -1.27   0.207     -53.4067    11.66109
+                        3  |   11.58971   9.589064     1.21   0.229    -7.382485    30.56191
+                        4  |    1.44473   14.04693     0.10   0.918    -26.34747    29.23693
+                        5  |  -7.140063   14.21791    -0.50   0.616    -35.27055    20.99043
+                           |
+                 2.borders |          0  (omitted)
+                           |
+                  eateries |
+                        3  |  -34.70515   20.99925    -1.65   0.101    -76.25268    6.842373
+                        4  |  -40.37514   18.59747    -2.17   0.032    -77.17069   -3.579597
+                           |
+                  cultural |
+                        3  |  -.1889484   9.389726    -0.02   0.984    -18.76675    18.38886
+                        4  |   11.14643   11.33881     0.98   0.327    -11.28768    33.58055
+                           |
+                gatherings |
+                        3  |  -2.334899   5.747947    -0.41   0.685    -13.70735    9.037554
+                        4  |  -1.979121   8.856866    -0.22   0.824    -19.50265    15.54441
+                           |
+                  province |
+         British Columbia  |   11.37171   16.64764     0.68   0.496    -21.56605    44.30947
+                 Manitoba  |   6.810939   13.48852     0.50   0.614    -19.87643    33.49831
+            New Brunswick  |   32.91543   13.63906     2.41   0.017     5.930213    59.90065
+Newfoundland and Labrador  |   37.04603   15.01918     2.47   0.015     7.330225    66.76184
+    Northwest Territories  |  -79.21263   16.95463    -4.67   0.000    -112.7578   -45.66747
+              Nova Scotia  |   16.01702   13.33943     1.20   0.232    -10.37538    42.40941
+                  Ontario  |  -6.105014   18.89565    -0.32   0.747    -43.49052    31.28049
+     Prince Edward Island  |   89.67404   14.43766     6.21   0.000     61.10877    118.2393
+                   Quebec  |  -10.41543   14.08057    -0.74   0.461    -38.27417    17.44332
+             Saskatchewan  |    15.5687   14.97775     1.04   0.301    -14.06516    45.20255
+          Yukon Territory  |          0  (omitted)
+                           |
+                     _cons |   210.9712   20.59438    10.24   0.000     170.2247    251.7177
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        15           0          15     |
+-----------------------------------------------------+
+
+. 
+. reghdfe walking i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province if wave == 0, a(time)
+note: 2bn.borders is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+(MWFE estimator converged in 1 iterations)
+note: 2.borders omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =        127
+Absorbing 1 HDFE group                            F(  18,     94) =      40.98
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9058
+                                                  Adj R-squared   =     0.8737
+                                                  Within R-sq.    =     0.8870
+                                                  Root MSE        =    14.2012
+
+--------------------------------------------------------------------------------------------
+                   walking |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                  4.stores |   12.20271   9.468687     1.29   0.201    -6.597588    31.00301
+                           |
+                 schooling |
+                        3  |   7.416752   10.92353     0.68   0.499    -14.27217    29.10568
+                        4  |   16.64567   10.05549     1.66   0.101    -3.319739    36.61109
+                        5  |   9.303493   12.66927     0.73   0.465    -15.85165    34.45863
+                           |
+                 2.borders |          0  (omitted)
+                           |
+                  eateries |
+                        3  |  -23.11838   18.14107    -1.27   0.206    -59.13789    12.90114
+                        4  |  -1.499184   15.60017    -0.10   0.924    -32.47369    29.47532
+                           |
+                  cultural |
+                        3  |  -11.68585   12.20997    -0.96   0.341    -35.92902    12.55733
+                        4  |  -19.24415   13.51814    -1.42   0.158    -46.08474    7.596446
+                           |
+                gatherings |
+                        3  |  -4.649739   5.272119    -0.88   0.380    -15.11765    5.818177
+                        4  |  -13.59574   7.540632    -1.80   0.075    -28.56784    1.376365
+                           |
+                  province |
+         British Columbia  |   -46.5281   14.40602    -3.23   0.002    -75.13159   -17.92461
+                 Manitoba  |   -44.2415   11.37398    -3.89   0.000    -66.82481    -21.6582
+            New Brunswick  |   8.175258   11.59445     0.71   0.482    -14.84579     31.1963
+Newfoundland and Labrador  |   17.17289   13.10692     1.31   0.193    -8.851193    43.19698
+              Nova Scotia  |  -32.87839   11.54693    -2.85   0.005    -55.80509   -9.951701
+                  Ontario  |  -65.07445   16.88528    -3.85   0.000    -98.60056   -31.54834
+                   Quebec  |  -74.47089   12.33914    -6.04   0.000    -98.97055   -49.97124
+             Saskatchewan  |  -11.92146   13.06433    -0.91   0.364      -37.861    14.01808
+                           |
+                     _cons |   209.6588   20.13249    10.41   0.000     169.6852    249.6323
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        15           0          15     |
+-----------------------------------------------------+
+
+. 
+. reghdfe transit i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province if wave == 0, a(time)
+note: 2bn.borders is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+(MWFE estimator converged in 1 iterations)
+note: 2.borders omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =         99
+Absorbing 1 HDFE group                            F(  16,     68) =      14.70
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8418
+                                                  Adj R-squared   =     0.7720
+                                                  Within R-sq.    =     0.7757
+                                                  Root MSE        =     4.8643
+
+-----------------------------------------------------------------------------------
+          transit |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+         4.stores |   4.241779   4.445784     0.95   0.343    -4.629644     13.1132
+                  |
+        schooling |
+               3  |  -5.510951   4.181696    -1.32   0.192     -13.8554    2.833494
+               4  |  -3.035418   3.570509    -0.85   0.398    -10.16026    4.089421
+               5  |  -3.915286   4.568763    -0.86   0.394    -13.03211    5.201539
+                  |
+        2.borders |          0  (omitted)
+                  |
+         eateries |
+               3  |   .8949584   6.442334     0.14   0.890    -11.96052    13.75044
+               4  |   2.352875   6.063516     0.39   0.699    -9.746682    14.45243
+                  |
+         cultural |
+               3  |  -6.494167   4.470073    -1.45   0.151    -15.41406    2.425725
+               4  |    -5.2741   4.856815    -1.09   0.281    -14.96572    4.417523
+                  |
+       gatherings |
+               3  |    .360485    2.47294     0.15   0.885    -4.574189    5.295159
+               4  |  -3.801207   2.900698    -1.31   0.194    -9.589461    1.987046
+                  |
+         province |
+British Columbia  |   -20.0412   5.597231    -3.58   0.001     -31.2103   -8.872098
+        Manitoba  |  -.2522125   4.109859    -0.06   0.951    -8.453309    7.948884
+     Nova Scotia  |  -3.260796   4.275191    -0.76   0.448    -11.79181    5.270214
+         Ontario  |  -23.50408   6.505304    -3.61   0.001    -36.48521   -10.52295
+          Quebec  |  -5.689862   4.672426    -1.22   0.228    -15.01354    3.633819
+    Saskatchewan  |  -12.21314   4.920523    -2.48   0.016    -22.03189   -2.394392
+                  |
+            _cons |   76.14135   7.843496     9.71   0.000      60.4899     91.7928
+-----------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        15           0          15     |
+-----------------------------------------------------+
+
+. 
+. reghdfe workplaces_percent_change_from_b i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province if wave == 0, a(time)
+note: 2bn.borders is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+(MWFE estimator converged in 1 iterations)
+note: 2.borders omitted because of collinearity
+note: 13.province omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =        167
+Absorbing 1 HDFE group                            F(  23,    129) =      56.81
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9305
+                                                  Adj R-squared   =     0.9105
+                                                  Within R-sq.    =     0.9101
+                                                  Root MSE        =     2.7421
+
+--------------------------------------------------------------------------------------------
+workplaces_percent_chang~b |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                    stores |
+                        3  |  -14.65291   2.332149    -6.28   0.000    -19.26712   -10.03869
+                        4  |  -16.24004   2.695226    -6.03   0.000    -21.57261   -10.90747
+                           |
+                 schooling |
+                        2  |  -1.909232   2.597168    -0.74   0.464    -7.047793    3.229328
+                        3  |  -.4456005   1.965115    -0.23   0.821    -4.333628    3.442427
+                        4  |  -3.797181   2.588257    -1.47   0.145    -8.918112     1.32375
+                        5  |  -1.072139   2.586769    -0.41   0.679    -6.190125    4.045847
+                           |
+                 2.borders |          0  (omitted)
+                           |
+                  eateries |
+                        3  |  -6.077932   3.046451    -2.00   0.048    -12.10541    -.050453
+                        4  |  -4.807292   2.819391    -1.71   0.091    -10.38553    .7709421
+                           |
+                  cultural |
+                        3  |   .9623771   1.457163     0.66   0.510    -1.920656     3.84541
+                        4  |   1.029759    1.69665     0.61   0.545    -2.327105    4.386624
+                           |
+                gatherings |
+                        3  |   2.671966   .8489091     3.15   0.002     .9923789    4.351554
+                        4  |   3.846813   1.375995     2.80   0.006     1.124373    6.569253
+                           |
+                  province |
+         British Columbia  |   4.178917   2.318099     1.80   0.074    -.4074995    8.765333
+                 Manitoba  |   5.732932   2.068145     2.77   0.006     1.641056    9.824807
+            New Brunswick  |   7.421651   2.090542     3.55   0.001     3.285462    11.55784
+Newfoundland and Labrador  |   16.07106   2.174861     7.39   0.000     11.76805    20.37408
+    Northwest Territories  |   12.83371   2.860008     4.49   0.000     7.175114    18.49231
+              Nova Scotia  |   1.428345   2.006775     0.71   0.478    -2.542108    5.398797
+                  Nunavut  |   30.30714   2.244955    13.50   0.000     25.86544    34.74884
+                  Ontario  |  -1.914505   2.542974    -0.75   0.453    -6.945842    3.116832
+     Prince Edward Island  |   11.40833   2.135247     5.34   0.000     7.183692    15.63297
+                   Quebec  |  -.6429802   2.102974    -0.31   0.760    -4.803766    3.517806
+             Saskatchewan  |   11.20051   2.262522     4.95   0.000     6.724058    15.67697
+          Yukon Territory  |          0  (omitted)
+                           |
+                     _cons |  -20.28497   3.118181    -6.51   0.000    -26.45437   -14.11558
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        15           0          15     |
+-----------------------------------------------------+
+
+. 
+. reghdfe retail_and_recreation_percent_ch i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province if wave == 0, a(time)
+note: 2bn.borders is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+(MWFE estimator converged in 1 iterations)
+note: 2.borders omitted because of collinearity
+note: 13.province omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =        153
+Absorbing 1 HDFE group                            F(  22,    116) =      49.76
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9203
+                                                  Adj R-squared   =     0.8956
+                                                  Within R-sq.    =     0.9042
+                                                  Root MSE        =     3.7826
+
+--------------------------------------------------------------------------------------------
+retail_and_recreation_pe~h |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                    stores |
+                        3  |   7.531827   3.298662     2.28   0.024      .998412    14.06524
+                        4  |   10.66279   3.817719     2.79   0.006     3.101316    18.22426
+                           |
+                 schooling |
+                        2  |   6.152707   4.200954     1.46   0.146    -2.167811    14.47323
+                        3  |   9.304774   2.813743     3.31   0.001     3.731801    14.87775
+                        4  |   9.347358   3.829558     2.44   0.016     1.762436    16.93228
+                        5  |   7.635978    3.69383     2.07   0.041     .3198815    14.95207
+                           |
+                 2.borders |          0  (omitted)
+                           |
+                  eateries |
+                        3  |   6.178129   4.618018     1.34   0.184    -2.968437     15.3247
+                        4  |   5.619205   4.095296     1.37   0.173    -2.492045    13.73046
+                           |
+                  cultural |
+                        3  |   1.036003   2.086273     0.50   0.620    -3.096124     5.16813
+                        4  |   3.753658   2.517162     1.49   0.139    -1.231898    8.739214
+                           |
+                gatherings |
+                        3  |  -1.150747   1.287794    -0.89   0.373    -3.701386    1.399891
+                        4  |  -1.206362   1.948875    -0.62   0.537    -5.066355    2.653631
+                           |
+                  province |
+         British Columbia  |   -4.29567   3.713817    -1.16   0.250    -11.65135    3.060013
+                 Manitoba  |   .7793662   2.970562     0.26   0.794    -5.104206    6.662939
+            New Brunswick  |   3.593208   3.031033     1.19   0.238    -2.410135    9.596551
+Newfoundland and Labrador  |   11.35156   3.326951     3.41   0.001     4.762116    17.94101
+    Northwest Territories  |  -13.55261   4.045418    -3.35   0.001    -21.56507   -5.540147
+              Nova Scotia  |  -1.655591   2.978402    -0.56   0.579    -7.554691     4.24351
+                  Ontario  |   -11.6434   4.218697    -2.76   0.007    -19.99906    -3.28774
+     Prince Edward Island  |   10.96897   3.286203     3.34   0.001     4.460228    17.47771
+                   Quebec  |  -3.669246   3.158786    -1.16   0.248     -9.92562    2.587129
+             Saskatchewan  |    1.08455   3.326641     0.33   0.745    -5.504283    7.673382
+          Yukon Territory  |          0  (omitted)
+                           |
+                     _cons |  -31.58637   4.553746    -6.94   0.000    -40.60564    -22.5671
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        15           0          15     |
+-----------------------------------------------------+
+
+. 
+. reghdfe residential_percent_change_from_ i.stores i.schooling i.borders i.eateries i.cultural i.gatherings i.province if wave == 0, a(time)
+note: 2bn.borders is probably collinear with the fixed effects (all partialled-out values are close to zero; tol = 1.0e-09)
+(MWFE estimator converged in 1 iterations)
+note: 2.borders omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =        140
+Absorbing 1 HDFE group                            F(  19,    106) =      38.51
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.9006
+                                                  Adj R-squared   =     0.8697
+                                                  Within R-sq.    =     0.8735
+                                                  Root MSE        =     1.2046
+
+--------------------------------------------------------------------------------------------
+residential_percent_chan~_ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+                  4.stores |  -1.467412   .7853492    -1.87   0.064    -3.024443    .0896194
+                           |
+                 schooling |
+                        3  |   .5740507   .8920759     0.64   0.521    -1.194577    2.342678
+                        4  |   .1810574   .8489964     0.21   0.832    -1.502161    1.864275
+                        5  |   -.060713   1.066086    -0.06   0.955    -2.174332    2.052906
+                           |
+                 2.borders |          0  (omitted)
+                           |
+                  eateries |
+                        3  |    .318397   1.492918     0.21   0.832    -2.641458    3.278252
+                        4  |  -.3188332   1.301531    -0.24   0.807    -2.899245    2.261579
+                           |
+                  cultural |
+                        3  |   .1958361   .8530607     0.23   0.819     -1.49544    1.887112
+                        4  |  -.0220905   .9287405    -0.02   0.981    -1.863409    1.819228
+                           |
+                gatherings |
+                        3  |   .8196324   .4423313     1.85   0.067    -.0573323    1.696597
+                        4  |   .6914306   .6322744     1.09   0.277    -.5621148    1.944976
+                           |
+                  province |
+         British Columbia  |   1.901306   1.192881     1.59   0.114    -.4636962    4.266308
+                 Manitoba  |   .9853627   .9582283     1.03   0.306    -.9144182    2.885144
+            New Brunswick  |  -.9549201   .9702752    -0.98   0.327    -2.878585    .9687448
+Newfoundland and Labrador  |  -4.573279   1.090438    -4.19   0.000    -6.735178   -2.411379
+              Nova Scotia  |   1.080856    .967107     1.12   0.266    -.8365281    2.998239
+                  Ontario  |   5.411512   1.384269     3.91   0.000     2.667065    8.155959
+     Prince Edward Island  |  -3.089236   1.044398    -2.96   0.004    -5.159857   -1.018614
+                   Quebec  |   3.298818   1.030169     3.20   0.002     1.256408    5.341227
+             Saskatchewan  |  -1.046247   1.096254    -0.95   0.342    -3.219676    1.127183
+                           |
+                     _cons |   7.159046   1.580797     4.53   0.000     4.024962    10.29313
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |        15           0          15     |
+-----------------------------------------------------+
+
+. 
+. // Breton Main Regressions Second Wave
+. reghdfe driving i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 2, a(time)
+(MWFE estimator converged in 1 iterations)
+note: 12.province omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =      1,691
+Absorbing 1 HDFE group                            F(  20,   1530) =     210.97
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8598
+                                                  Adj R-squared   =     0.8451
+                                                  Within R-sq.    =     0.7339
+                                                  Root MSE        =    10.7032
+
+---------------------------------------------------------------------------------------------
+                    driving |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------------+----------------------------------------------------------------
+ nonessentialretailbusiness |
+                         2  |  -3.692434   1.711229    -2.16   0.031    -7.049036   -.3358319
+                         3  |  -7.640281   2.537413    -3.01   0.003    -12.61746   -2.663106
+                            |
+     3.nonessentialservices |   1.908675   1.274511     1.50   0.134    -.5912986    4.408648
+3.culturalservicesandvenues |   1.948039   1.414012     1.38   0.169    -.8255675    4.721645
+                            |
+                    schools |
+                         3  |    5.08937   1.094724     4.65   0.000     2.942051    7.236689
+                         4  |  -1.227763   1.573284    -0.78   0.435    -4.313785    1.858259
+                            |
+              2.intertravel |   12.41868    2.79853     4.44   0.000     6.929318    17.90804
+              2.intratravel |    1.63523   1.858476     0.88   0.379    -2.010199    5.280659
+                            |
+       diningandrestaurants |
+                         2  |  -12.29607   2.495182    -4.93   0.000    -17.19041   -7.401735
+                         3  |    -21.196   2.300875    -9.21   0.000     -25.7092   -16.68279
+                            |
+                   province |
+          British Columbia  |  -4.895567   2.111994    -2.32   0.021    -9.038276   -.7528585
+                  Manitoba  |  -7.429283    2.33319    -3.18   0.001    -12.00587   -2.852694
+             New Brunswick  |   1.684055   2.917566     0.58   0.564    -4.038796    7.406907
+ Newfoundland and Labrador  |   5.940879   2.951738     2.01   0.044     .1509991    11.73076
+     Northwest Territories  |  -42.06072   1.454466   -28.92   0.000    -44.91368   -39.20776
+               Nova Scotia  |  -5.375199   3.532027    -1.52   0.128    -12.30333    1.552927
+                   Ontario  |  -3.798156   1.837442    -2.07   0.039    -7.402328   -.1939844
+      Prince Edward Island  |   10.04689   2.943238     3.41   0.001     4.273679    15.82009
+                    Quebec  |  -7.868514   2.246708    -3.50   0.000    -12.27547   -3.461562
+              Saskatchewan  |          0  (omitted)
+           Yukon Territory  |   3.503535   1.454466     2.41   0.016      .650576    6.356494
+                            |
+                      _cons |   116.6525   2.783573    41.91   0.000     111.1925    122.1126
+---------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       141           0         141     |
+-----------------------------------------------------+
+
+. 
+. reghdfe walking i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 2, a(time)
+(MWFE estimator converged in 1 iterations)
+note: 12.province omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =      1,268
+Absorbing 1 HDFE group                            F(  17,   1110) =     300.17
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8846
+                                                  Adj R-squared   =     0.8682
+                                                  Within R-sq.    =     0.8213
+                                                  Root MSE        =    13.4473
+
+---------------------------------------------------------------------------------------------
+                    walking |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------------+----------------------------------------------------------------
+ nonessentialretailbusiness |
+                         2  |  -1.221394   2.171341    -0.56   0.574     -5.48179    3.039001
+                         3  |   2.003308   3.224346     0.62   0.535    -4.323193    8.329809
+                            |
+     3.nonessentialservices |   2.425713   1.645847     1.47   0.141    -.8036092    5.655036
+3.culturalservicesandvenues |  -1.474067     1.7951    -0.82   0.412    -4.996239    2.048104
+                            |
+                    schools |
+                         3  |    3.99236   1.442092     2.77   0.006     1.162827    6.821894
+                         4  |  -3.354875   2.029431    -1.65   0.099    -7.336828    .6270776
+                            |
+              2.intertravel |   14.00504   3.591577     3.90   0.000     6.957993    21.05208
+              2.intratravel |   -.907791   2.380861    -0.38   0.703    -5.579287    3.763705
+                            |
+       diningandrestaurants |
+                         2  |  -20.59855   3.280795    -6.28   0.000    -27.03581   -14.16129
+                         3  |  -28.44683   2.931449    -9.70   0.000    -34.19864   -22.69502
+                            |
+                   province |
+          British Columbia  |  -21.00053   2.681643    -7.83   0.000    -26.26219   -15.73887
+                  Manitoba  |  -39.37289   2.958795   -13.31   0.000    -45.17835   -33.56743
+             New Brunswick  |   14.96474   3.772763     3.97   0.000     7.562186    22.36729
+ Newfoundland and Labrador  |  -.1663435   3.820351    -0.04   0.965    -7.662268    7.329581
+               Nova Scotia  |  -19.90016   4.589745    -4.34   0.000    -28.90571   -10.89461
+                   Ontario  |  -46.51633   2.355491   -19.75   0.000    -51.13805   -41.89462
+                    Quebec  |   -39.6141   2.918731   -13.57   0.000    -45.34096   -33.88725
+              Saskatchewan  |          0  (omitted)
+                            |
+                      _cons |   154.7236   3.613638    42.82   0.000     147.6332    161.8139
+---------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       141           0         141     |
+-----------------------------------------------------+
+
+. 
+. reghdfe transit i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 2, a(time)
+(MWFE estimator converged in 1 iterations)
+note: 12.province omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =        986
+Absorbing 1 HDFE group                            F(  15,    830) =     247.59
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8917
+                                                  Adj R-squared   =     0.8715
+                                                  Within R-sq.    =     0.8173
+                                                  Root MSE        =     4.5000
+
+---------------------------------------------------------------------------------------------
+                    transit |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------------+----------------------------------------------------------------
+ nonessentialretailbusiness |
+                         2  |   4.951951   .8089768     6.12   0.000      3.36407    6.539832
+                         3  |   .3209444   1.302521     0.25   0.805    -2.235678    2.877567
+                            |
+     3.nonessentialservices |   .2716764   .7364037     0.37   0.712    -1.173756    1.717109
+3.culturalservicesandvenues |   .6214896   .6135591     1.01   0.311    -.5828203      1.8258
+                            |
+                    schools |
+                         3  |  -.0586969   .5021897    -0.12   0.907    -1.044408    .9270142
+                         4  |   .0570149   .7323699     0.08   0.938      -1.3805     1.49453
+                            |
+              2.intertravel |   -.794462   1.245729    -0.64   0.524    -3.239612    1.650688
+              2.intratravel |  -1.661848    .849331    -1.96   0.051    -3.328938     .005241
+                            |
+       diningandrestaurants |
+                         2  |  -14.40876   1.150494   -12.52   0.000    -16.66698   -12.15054
+                         3  |  -19.41731   1.003221   -19.35   0.000    -21.38646   -17.44816
+                            |
+                   province |
+          British Columbia  |  -7.011754   .9201266    -7.62   0.000    -8.817802   -5.205705
+                  Manitoba  |   7.407975   1.018356     7.27   0.000     5.409119     9.40683
+               Nova Scotia  |   4.079111   1.688465     2.42   0.016     .7649482    7.393273
+                   Ontario  |  -8.267921   .8543159    -9.68   0.000    -9.944795   -6.591048
+                    Quebec  |  -1.969471   1.004166    -1.96   0.050    -3.940475    .0015333
+              Saskatchewan  |          0  (omitted)
+                            |
+                      _cons |   60.23821   1.271222    47.39   0.000     57.74303     62.7334
+---------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       141           0         141     |
+-----------------------------------------------------+
+
+. 
+. reghdfe workplaces_percent_change_from_b i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 2, a(time)
+(MWFE estimator converged in 1 iterations)
+note: 3.culturalservicesandvenues omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =      1,780
+Absorbing 1 HDFE group                            F(  23,   1616) =     131.70
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8538
+                                                  Adj R-squared   =     0.8390
+                                                  Within R-sq.    =     0.6521
+                                                  Root MSE        =     7.0195
+
+--------------------------------------------------------------------------------------------
+workplaces_percent_chang~b |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------------+----------------------------------------------------------------
+nonessentialretailbusiness |
+                        2  |  -7.564807    2.75014    -2.75   0.006    -12.95902    -2.17059
+                        3  |  -12.23614   3.001243    -4.08   0.000    -18.12288   -6.349407
+                           |
+      nonessentialservices |
+                        2  |   6.254509    3.29239     1.90   0.058    -.2032929    12.71231
+                        3  |   5.893103   3.462089     1.70   0.089    -.8975529    12.68376
+                           |
+ culturalservicesandvenues |
+                        2  |   .1927199   .9268847     0.21   0.835    -1.625302    2.010742
+                        3  |          0  (omitted)
+                           |
+                   schools |
+                        3  |   -.605114   .7161785    -0.84   0.398     -2.00985    .7996223
+                        4  |  -3.669576   1.005163    -3.65   0.000    -5.641135   -1.698016
+                           |
+             2.intertravel |   13.41747   1.802201     7.45   0.000     9.882574    16.95237
+             2.intratravel |  -1.897558   1.218661    -1.56   0.120     -4.28788    .4927648
+                           |
+      diningandrestaurants |
+                        2  |   1.852618   1.634793     1.13   0.257    -1.353918    5.059154
+                        3  |  -2.261529   1.507326    -1.50   0.134    -5.218047    .6949896
+                           |
+                  province |
+         British Columbia  |   1.037155   1.384966     0.75   0.454    -1.679363    3.753674
+                 Manitoba  |  -5.430776   2.315706    -2.35   0.019    -9.972879   -.8886731
+            New Brunswick  |   -10.2817   2.005612    -5.13   0.000    -14.21557   -6.347825
+Newfoundland and Labrador  |   5.798453   2.033263     2.85   0.004     1.810344    9.786561
+    Northwest Territories  |   14.28015   .9551421    14.95   0.000      12.4067    16.15359
+              Nova Scotia  |  -5.263377   2.424782    -2.17   0.030    -10.01943    -.507329
+                  Nunavut  |   29.87574   1.679577    17.79   0.000     26.58136    33.17011
+                  Ontario  |   1.203951   1.204936     1.00   0.318     -1.15945    3.567352
+     Prince Edward Island  |  -1.589864   2.031089    -0.78   0.434     -5.57371    2.393982
+                   Quebec  |   4.481783   1.474353     3.04   0.002     1.589938    7.373628
+             Saskatchewan  |  -.9346991   2.587819    -0.36   0.718    -6.010532    4.141134
+          Yukon Territory  |   16.10751   .9998656    16.11   0.000     14.14634    18.06868
+                           |
+                     _cons |  -29.41821   2.672362   -11.01   0.000    -34.65987   -24.17655
+--------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       141           0         141     |
+-----------------------------------------------------+
+
+. 
+. reghdfe retail_and_recreation_percent_ch i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 2, a(time)
+(MWFE estimator converged in 1 iterations)
+note: 12.province omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =      1,677
+Absorbing 1 HDFE group                            F(  20,   1516) =     155.52
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8120
+                                                  Adj R-squared   =     0.7922
+                                                  Within R-sq.    =     0.6723
+                                                  Root MSE        =     8.0122
+
+---------------------------------------------------------------------------------------------
+retail_and_recreation_per~h |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------------+----------------------------------------------------------------
+ nonessentialretailbusiness |
+                         2  |  -1.216427   1.281276    -0.95   0.343     -3.72969    1.296835
+                         3  |  -10.77638   1.899761    -5.67   0.000    -14.50282   -7.049939
+                            |
+     3.nonessentialservices |  -1.591048   .9543057    -1.67   0.096    -3.462948    .2808509
+3.culturalservicesandvenues |  -.0307189   1.058759    -0.03   0.977    -2.107507    2.046069
+                            |
+                    schools |
+                         3  |   1.853856   .8197339     2.26   0.024     .2459236    3.461789
+                         4  |  -2.759013   1.178491    -2.34   0.019    -5.070659   -.4473671
+                            |
+              2.intertravel |   9.861501   2.095923     4.71   0.000     5.750285    13.97272
+              2.intratravel |   -1.78545   1.391775    -1.28   0.200    -4.515459    .9445582
+                            |
+       diningandrestaurants |
+                         2  |   .5377178   1.868792     0.29   0.774    -3.127973    4.203409
+                         3  |  -7.034248   1.723172    -4.08   0.000     -10.4143   -3.654194
+                            |
+                   province |
+          British Columbia  |   .7459406   1.581261     0.47   0.637     -2.35575    3.847631
+                  Manitoba  |  -3.505208   1.746769    -2.01   0.045    -6.931548   -.0788682
+             New Brunswick  |  -2.026739   2.185367    -0.93   0.354    -6.313401    2.259923
+ Newfoundland and Labrador  |   9.505513   2.211067     4.30   0.000     5.168439    13.84259
+     Northwest Territories  |  -5.164396   1.095904    -4.71   0.000    -7.314044   -3.014747
+               Nova Scotia  |   1.654174   2.645567     0.63   0.532    -3.535186    6.843534
+                   Ontario  |   3.857854   1.376158     2.80   0.005     1.158479     6.55723
+      Prince Edward Island  |   9.435771   2.204727     4.28   0.000     5.111133    13.76041
+                    Quebec  |    1.62949   1.682659     0.97   0.333    -1.671097    4.930077
+              Saskatchewan  |          0  (omitted)
+           Yukon Territory  |   -9.58206   1.107002    -8.66   0.000    -11.75348   -7.410643
+                            |
+                      _cons |  -23.41157   2.084829   -11.23   0.000    -27.50102   -19.32212
+---------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       141           0         141     |
+-----------------------------------------------------+
+
+. 
+. reghdfe residential_percent_change_from_ i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 2, a(time)
+(MWFE estimator converged in 1 iterations)
+note: 12.province omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =      1,409
+Absorbing 1 HDFE group                            F(  18,   1250) =     197.29
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.8893
+                                                  Adj R-squared   =     0.8753
+                                                  Within R-sq.    =     0.7397
+                                                  Root MSE        =     1.9857
+
+---------------------------------------------------------------------------------------------
+residential_percent_chang~_ |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------------+----------------------------------------------------------------
+ nonessentialretailbusiness |
+                         2  |    .931666   .3188927     2.92   0.004     .3060421     1.55729
+                         3  |   2.565104   .4729098     5.42   0.000     1.637319    3.492888
+                            |
+     3.nonessentialservices |   .1012205   .2375627     0.43   0.670    -.3648451    .5672862
+3.culturalservicesandvenues |  -.0068497   .2639424    -0.03   0.979    -.5246686    .5109692
+                            |
+                    schools |
+                         3  |  -.2594872   .2064424    -1.26   0.209     -.664499    .1455246
+                         4  |   1.249228   .2968201     4.21   0.000     .6669072    1.831548
+                            |
+              2.intertravel |  -3.331284   .5255326    -6.34   0.000    -4.362307   -2.300261
+              2.intratravel |    .338803   .3487494     0.97   0.331    -.3453956    1.023002
+                            |
+       diningandrestaurants |
+                         2  |  -.8086284   .4669855    -1.73   0.084     -1.72479    .1075334
+                         3  |   1.099904   .4294827     2.56   0.011     .2573177    1.942491
+                            |
+                   province |
+          British Columbia  |  -.6058909    .393904    -1.54   0.124    -1.378677    .1668951
+                  Manitoba  |   1.760257   .4338488     4.06   0.000     .9091046    2.611409
+             New Brunswick  |    .176067    .550297     0.32   0.749    -.9035407    1.255675
+ Newfoundland and Labrador  |  -3.350497   .5571125    -6.01   0.000    -4.443475   -2.257518
+               Nova Scotia  |  -1.785137   .6641171    -2.69   0.007    -3.088044   -.4822301
+                   Ontario  |  -.0481907   .3443429    -0.14   0.889    -.7237445    .6273631
+      Prince Edward Island  |   -1.47768   .5555083    -2.66   0.008    -2.567512   -.3878486
+                    Quebec  |  -.5552613    .421913    -1.32   0.188    -1.382997    .2724744
+              Saskatchewan  |          0  (omitted)
+                            |
+                      _cons |   11.60909   .5225817    22.21   0.000     10.58385    12.63432
+---------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       141           0         141     |
+-----------------------------------------------------+
+
+. 
+. reghdfe grocery_and_pharmacy_percent_cha i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 2, a(time)
+(MWFE estimator converged in 1 iterations)
+note: 12.province omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =      1,430
+Absorbing 1 HDFE group                            F(  19,   1270) =      23.11
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.7521
+                                                  Adj R-squared   =     0.7210
+                                                  Within R-sq.    =     0.2569
+                                                  Root MSE        =     8.5252
+
+---------------------------------------------------------------------------------------------
+grocery_and_pharmacy_perc~a |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------------+----------------------------------------------------------------
+ nonessentialretailbusiness |
+                         2  |   -.279388   1.368433    -0.20   0.838    -2.964026     2.40525
+                         3  |  -4.531786   2.029636    -2.23   0.026    -8.513594   -.5499772
+                            |
+     3.nonessentialservices |  -.2544831   1.019537    -0.25   0.803    -2.254644    1.745678
+3.culturalservicesandvenues |   .0218905   1.132577     0.02   0.985    -2.200037    2.243818
+                            |
+                    schools |
+                         3  |    1.08722   .8857524     1.23   0.220    -.6504793    2.824918
+                         4  |  -2.969135   1.272759    -2.33   0.020    -5.466077   -.4721928
+                            |
+              2.intertravel |   5.822047   2.253627     2.58   0.010     1.400806    10.24329
+              2.intratravel |   -2.46548   1.495881    -1.65   0.100    -5.400149    .4691892
+                            |
+       diningandrestaurants |
+                         2  |   .7117708   2.003508     0.36   0.722    -3.218779    4.642321
+                         3  |   -1.75668   1.843006    -0.95   0.341    -5.372351     1.85899
+                            |
+                   province |
+          British Columbia  |   5.121419   1.690432     3.03   0.002     1.805073    8.437766
+                  Manitoba  |  -5.612051   1.862372    -3.01   0.003    -9.265716   -1.958387
+             New Brunswick  |  -9.012052   2.358896    -3.82   0.000    -13.63981    -4.38429
+ Newfoundland and Labrador  |  -4.386143   2.387904    -1.84   0.066    -9.070813    .2985278
+     Northwest Territories  |  -3.657994   2.137793    -1.71   0.087    -7.851989        .536
+               Nova Scotia  |  -1.358914   2.848082    -0.48   0.633    -6.946377    4.228549
+                   Ontario  |   .3118211   1.476706     0.21   0.833     -2.58523    3.208872
+      Prince Edward Island  |  -4.073265   2.380983    -1.71   0.087    -8.744357    .5978277
+                    Quebec  |  -2.663145   1.809195    -1.47   0.141    -6.212485    .8861942
+              Saskatchewan  |          0  (omitted)
+                            |
+                      _cons |  -4.045409   2.241585    -1.80   0.071    -8.443026    .3522086
+---------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       141           0         141     |
+-----------------------------------------------------+
+
+. 
+. reghdfe parks_percent_change_from_baseli i.nonessentialretailbusiness i.nonessentialservices i.culturalservicesandvenues i.schools i.intertravel i.intratravel i.diningandrestaurants i.province if wave == 2, a(time)
+(MWFE estimator converged in 1 iterations)
+note: 12.province omitted because of collinearity
+
+HDFE Linear regression                            Number of obs   =      1,270
+Absorbing 1 HDFE group                            F(  18,   1111) =      29.29
+                                                  Prob > F        =     0.0000
+                                                  R-squared       =     0.5944
+                                                  Adj R-squared   =     0.5367
+                                                  Within R-sq.    =     0.3218
+                                                  Root MSE        =    29.5709
+
+---------------------------------------------------------------------------------------------
+parks_percent_change_from~i |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+----------------------------+----------------------------------------------------------------
+ nonessentialretailbusiness |
+                         2  |  -12.52805    4.77488    -2.62   0.009    -21.89685    -3.15925
+                         3  |  -15.54872   7.090164    -2.19   0.029    -29.46034     -1.6371
+                            |
+     3.nonessentialservices |   11.37969   3.619226     3.14   0.002     4.278402    18.48098
+3.culturalservicesandvenues |   9.419501   3.947433     2.39   0.017     1.674237    17.16477
+                            |
+                    schools |
+                         3  |   5.909074   3.171224     1.86   0.063    -.3131903    12.13134
+                         4  |   1.716915   4.463333     0.38   0.701    -7.040597    10.47443
+                            |
+              2.intertravel |   18.92775   7.900233     2.40   0.017     3.426695    34.42881
+              2.intratravel |  -8.811773   5.236207    -1.68   0.093    -19.08574    1.462197
+                            |
+       diningandrestaurants |
+                         2  |  -6.539999   7.214833    -0.91   0.365    -20.69623    7.616236
+                         3  |  -13.46754   6.447132    -2.09   0.037    -26.11746   -.8176076
+                            |
+                   province |
+          British Columbia  |   37.49018   5.897344     6.36   0.000       25.919    49.06137
+                  Manitoba  |   -12.0832   6.506655    -1.86   0.064    -24.84992    .6835155
+             New Brunswick  |   10.18705   8.299446     1.23   0.220    -6.097308     26.4714
+ Newfoundland and Labrador  |    24.3318   8.413934     2.89   0.004     7.822805    40.84079
+               Nova Scotia  |   44.81573   10.09532     4.44   0.000      25.0077    64.62377
+                   Ontario  |   17.05312   5.180339     3.29   0.001     6.888767    27.21747
+      Prince Edward Island  |  -28.24187   17.65433    -1.60   0.110    -62.88147     6.39772
+                    Quebec  |   30.59978   6.419692     4.77   0.000     18.00369    43.19587
+              Saskatchewan  |          0  (omitted)
+                            |
+                      _cons |   2.353217   7.947581     0.30   0.767    -13.24074    17.94718
+---------------------------------------------------------------------------------------------
+
+Absorbed degrees of freedom:
+-----------------------------------------------------+
+ Absorbed FE | Categories  - Redundant  = Num. Coefs |
+-------------+---------------------------------------|
+        time |       141           0         141     |
+-----------------------------------------------------+
+
+. 
+. 
+. log close       
+      name:  <unnamed>
+       log:  C:\Users\hatho\Downloads\ECO446 Final Paper Regression.log
+  log type:  text
+ closed on:   8 Apr 2021, 23:36:08
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
